@@ -30,7 +30,8 @@ module.exports = {
             function mainDisplayPage() {
                 // Global Stat Variables
                 var highestBalance = 0;
-                var highestBalanceUser = "testuser";
+                var highestBalanceUsers = "Kenzie";
+                var highestBalanceUsersStoreName = `${authorUserName}'s Store`;
                 // User Stat Variables
                 var authorStoreBalance = 0;
 
@@ -39,9 +40,9 @@ module.exports = {
                     .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Welcome back, store owner **${authorUserName}**!\n`)
                     .addFields(
-                        { name: 'Your Statistics', value: `\`\`\`Your Store Balance: $${authorStoreBalance}\`\`\``, inline: true },
-                        { name: 'Global Statistics', value: `\`\`\`Highest Global Balance: $${highestBalance} - ${highestBalanceUser}\`\`\``, inline: true },
-                        { name: 'Manage Your Store', value: `\`\`\`${prefix}link\n${prefix}unlink\n${prefix}linkstatus userid\n${prefix}assignments\`\`\``, inline: false },
+                        { name: 'Your Statistics', value: `\`\`\`Your Store Balance: $${authorStoreBalance}  \`\`\``, inline: true },
+                        { name: 'Global Statistics', value: `\`\`\`Top Balance: $${highestBalance} - ${highestBalanceUsersStoreName}\`\`\``, inline: true },
+                        { name: 'Manage Your Store', value: `\`\`\`${prefix}drugstore work - Begin working to earn cash\n${prefix}drugstore buy <store-id> <item-id> - Buy an item from another user's store\n${prefix}drugstore delete - Delete your store\`\`\``, inline: false },
                     );
                 message.reply({ embeds: [embed] });
             }

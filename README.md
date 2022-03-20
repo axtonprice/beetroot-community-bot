@@ -18,7 +18,8 @@ Then, start the bot
 ```
 
 Screenshots:
-<img src="https://cdn.discordapp.com/attachments/954596313197080586/955207873720373329/0LS1XVnsd1.png">
+<br>
+<img src="https://cdn.discordapp.com/attachments/954596313197080586/955207873720373329/0LS1XVnsd1.png"><br>
 <img src="https://cdn.discordapp.com/attachments/954596313197080586/955207920126132234/3KT16m8lIF.png">
 
 

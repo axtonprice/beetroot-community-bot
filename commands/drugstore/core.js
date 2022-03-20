@@ -28,8 +28,12 @@ module.exports = {
             */
 
             function mainDisplayPage() {
+                // Global Stat Variables
                 var highestBalance = 0;
                 var highestBalanceUser = "testuser";
+                // User Stat Variables
+                var authorStoreBalance = 0;
+
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
                     .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))

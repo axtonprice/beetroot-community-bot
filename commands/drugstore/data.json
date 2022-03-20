@@ -1,0 +1,23 @@
+{
+	"components": {
+		"store_details": {
+			"store_name": "Axton's Meth Lab",
+			"store_description": "Come get yo ass meth n shit bruv dickhead",
+			"last_purchase": "2022-03-19 03:42:21.000000"
+		},
+		"store_menu": {
+			"001": {
+				"drug_name": "Weed",
+				"drug_description": "Devils lettuce blud",
+				"date_added": "2022-03-19 03:42:21.000000"
+			}
+		},
+		"store_customers": {
+			"441994490115391488": {
+				"item_id_purchase": "001",
+				"sales_price": "100",
+				"purchase_date": "2022-03-19 03:42:21.000000"
+			}
+		}
+	}
+}

@@ -1,7 +1,7 @@
 
 # Beetroot Community Bot
 
-<img width="200" height= "100" src="https://cdn.discordapp.com/attachments/954596313197080586/955212383561867274/repository-open-graph-template.png">
+<img width="400" height= "200" src="https://cdn.discordapp.com/attachments/954596313197080586/955212383561867274/repository-open-graph-template.png">
 
 Beetroot community bot, drugstore feature/s inspired by the TacoShack bot.
 ## Command Usages

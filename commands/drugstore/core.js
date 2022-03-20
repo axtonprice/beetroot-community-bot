@@ -28,11 +28,11 @@ module.exports = {
             */
 
             function mainDisplayPage() {
-                // Global Stat Variables
+                // Global Stats Variables
                 var highestBalance = 0;
                 var highestBalanceUsers = "Kenzie";
                 var highestBalanceUsersStoreName = `${authorUserName}'s Store`;
-                // User Stat Variables
+                // User Stats Variables
                 var authorStoreBalance = 0;
 
                 const embed = new Discord.MessageEmbed()

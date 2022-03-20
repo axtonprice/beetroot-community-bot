@@ -30,10 +30,11 @@ module.exports = {
             function mainDisplayPage() {
                 // Global Stats Variables
                 var highestBalance = 0;
-                var highestBalanceUsers = "Kenzie";
-                var highestBalanceUsersStoreName = `${authorUserName}'s Store`;
+                var highestBalanceUser = "Kenzie";
+                var highestBalanceStoreName = `${authorUserName}'s Store`;
                 // User Stats Variables
                 var authorStoreBalance = 0;
+                var authorStoreName = "";
 
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')

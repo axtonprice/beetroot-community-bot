@@ -6,6 +6,13 @@ const mysql = require("mysql");
 const moment = require('moment');
 const log = console.log.bind(console);
 
+
+/*  
+    Beetroot Drugstore System
+    Axton P.#1234 @ 2022
+    https://github.com/axtonprice/beetroot-community-bot
+*/
+
 module.exports = {
     name: "drugstore",
     aliases: ['drug', "store", "ds"],
@@ -16,13 +23,23 @@ module.exports = {
             var authorUserId = message.author.id;
             var authorUserName = message.author.username;
 
-            /*  Beetroot Drugstore System
-            Axton P.#1234 @ 2022
-            https://github.com/axtonprice/beetroot-drugstore
+            /* 
+                Core Functions
             */
 
-            function main(){
-
+            function mainDisplayPage() {
+                var highestBalance = 0;
+                var highestBalanceUser = "testuser";
+                const embed = new Discord.MessageEmbed()
+                    .setTitle('Beetroot Drugstore :pill:')
+                    .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                    .setDescription(`Welcome back, store owner **${authorUserName}**!\n`)
+                    .addFields(
+                        { name: 'Your Statistics', value: `\`\`\`asd\`\`\``, inline: true },
+                        { name: 'Global Statistics', value: `\`\`\`Highest Balance: $${highestBalance} - ${highestBalanceUser}\`\`\``, inline: true },
+                        { name: 'Manage Your Store', value: `\`\`\`${prefix}link\n${prefix}unlink\n${prefix}linkstatus userid\n${prefix}assignments\`\`\``, inline: false },
+                    );
+                message.reply({ embeds: [embed] });
             }
             function createShop() {
                 var authorUserId = message.author.id;
@@ -54,16 +71,15 @@ module.exports = {
                 }
             }
 
+            /* 
+                Function Loader Handler 
+            */
             if (args[0] === "create") {
-                createShop();
+                createShop(); // Create a new drugstore
             } else if (args[0] === "delete") {
-                deleteShop();
+                deleteShop(); // Delete users drugstore
             } else {
-                const embed = new Discord.MessageEmbed()
-                    .setTitle('Beetroot Drugstore :pill:')
-                    .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Use \`${prefix}drugstore\` to view drugstore commands!`);
-                message.reply({ embeds: [embed] });
+                mainDisplayPage(); // User has a store, display main page
             }
 
             connection.end();

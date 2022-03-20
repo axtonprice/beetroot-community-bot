@@ -21,6 +21,9 @@ module.exports = {
             https://github.com/axtonprice/beetroot-drugstore
             */
 
+            function main(){
+
+            }
             function createShop() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;

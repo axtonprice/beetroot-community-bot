@@ -100,10 +100,11 @@ module.exports = {
 
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
                     json = JSON.parse(results[0].response);
+                    log(json.components);
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`response = ${json.components}`);
+                        .setDescription(`response = ${json.components.store_details.store_name}`);
                     message.reply({ embeds: [embed] });
                 });
 

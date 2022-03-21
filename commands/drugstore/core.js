@@ -86,6 +86,7 @@ module.exports = {
             /* 
                 Function Loader Handler 
             */
+           
             if (args[0] === "create") {
                 createShop(); // Create a new drugstore
             } else if (args[0] === "delete") {

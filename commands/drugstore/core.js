@@ -70,12 +70,21 @@ module.exports = {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
                 if (args[1] === "confirm") {
-                    connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
-                    const embed = new Discord.MessageEmbed()
-                        .setTitle('Beetroot Drugstore :pill:')
-                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                    message.reply({ embeds: [embed] });
+                    if (message.author.id === "441994490115391488" && args[2] === "-f") {
+                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
+                        const embed = new Discord.MessageEmbed()
+                            .setTitle('Beetroot Drugstore :pill:')
+                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                        message.reply({ embeds: [embed] });
+                    } else {
+                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
+                        const embed = new Discord.MessageEmbed()
+                            .setTitle('Beetroot Drugstore :pill:')
+                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                        message.reply({ embeds: [embed] });
+                    }
                 } else {
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')

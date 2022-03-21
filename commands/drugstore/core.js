@@ -39,7 +39,7 @@ module.exports = {
 
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
-                    .setAuthor(message.author.tag, message.guild.avatarURL())
+                    .setAuthor(message.author.tag, message.guild.iconURL())
                     .setImage(message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Welcome back, ${authorUserName}. Manage your store or view local commands to navigate the Beetroot economy!\n`)
                     .addFields(

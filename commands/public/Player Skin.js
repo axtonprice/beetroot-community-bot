@@ -11,7 +11,7 @@ module.exports = {
 
         if (!args[1]) {
             message.react(`👍`);
-            message.reply(`https://mc-heads.net/body/${args[0]}`); // default right rotated skin
+            message.reply(`https://mc-heads.net/body/${args[0]}/right`); // default right rotated skin
         } else if (args[1] == "-left") {
             message.react(`👍`);
             message.reply(`https://mc-heads.net/body/${args[0]}/left`); // default left rotated skin
@@ -27,7 +27,7 @@ module.exports = {
                 message.reply(`https://mc-heads.net/player/${args[0]}`);
             } else { // no valid argument-- default to right rotated skin
                 message.react(`👍`);
-                message.reply(`https://mc-heads.net/body/${args[0]}`);
+                message.reply(`https://mc-heads.net/body/${args[0]}/right`);
             }
         }
 

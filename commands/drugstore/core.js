@@ -31,10 +31,10 @@ module.exports = {
                 // Global Stats Variables
                 var highestBalance = 0;
                 var highestBalanceUser = "Kenzie";
-                var highestBalanceStoreName = `${authorUserName}'s Store`;
+                var highestBalanceStoreName = `${highestBalanceUser}'s Store`;
                 // User Stats Variables
                 var authorStoreBalance = 0;
-                var authorStoreName = "";
+                var authorStoreName = `${authorUserName }'s Store`;
 
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
@@ -42,7 +42,7 @@ module.exports = {
                     .setDescription(`Welcome back, store owner **${authorUserName}**!\n`)
                     .addFields(
                         { name: 'Your Statistics', value: `\`\`\`Your Store Balance: $${authorStoreBalance}  \`\`\``, inline: true },
-                        { name: 'Global Statistics', value: `\`\`\`Top Balance: $${highestBalance} - ${highestBalanceUsersStoreName}\`\`\``, inline: true },
+                        { name: 'Global Statistics', value: `\`\`\`Top Balance: $${highestBalance} - ${highestBalanceStoreName}\`\`\``, inline: true },
                         { name: 'Manage Your Store', value: `\`\`\`${prefix}drugstore work - Begin working to earn cash\n${prefix}drugstore buy <store-id> <item-id> - Buy an item from another user's store\n${prefix}drugstore delete - Delete your store\`\`\``, inline: false },
                     );
                 message.reply({ embeds: [embed] });

@@ -105,14 +105,15 @@ module.exports = {
                     function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
                     var randomNum = randomInteger(85, 100);
                     json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
-                    jsonNew = json = parseInt(json.components.store_details.store_balance) + randomNum;
-                    // log(json.components.store_details.store_balance);
 
-                    connection.query("UPDATE `drug_stores` SET `store_data` = '" + jsonNew + "' WHERE `store_owner_id` = '" + message.author.id + "';", (error1, results1, fields1) => {
+                    jsonNew = json = parseInt(json.components.store_details.store_balance) + randomNum;
+                    json = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"My Methlab\",\n \"store_description\": \"My awesome drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"86\",\n \"work_again_date\": \"2022-03-21 03:42:21.000000\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
+
+                    connection.query("UPDATE `drug_stores` SET `store_data` = '" + json + "' WHERE `store_owner_id` = '" + message.author.id + "';", (error1, results1, fields1) => {
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`:thumbsup: You worked for 5 hours and received \`+ $${randomNum}\`!`);
+                            .setDescription(`:thumbsup: You worked for 6 hours and received \`+ $${randomNum}\`!`);
                         message.reply({ embeds: [embed] });
                     });
 

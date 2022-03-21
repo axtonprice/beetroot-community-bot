@@ -106,7 +106,7 @@ module.exports = {
                     var randomNum = randomInteger(85, 100);
                     json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
                     jsonNew = json = parseInt(json.components.store_details.store_balance) + randomNum;
-                    log(json.components.store_details.store_balance);
+                    // log(json.components.store_details.store_balance);
 
                     connection.query("UPDATE `drug_stores` SET `store_data` = '" + jsonNew + "' WHERE `store_owner_id` = '" + message.author.id + "';", (error1, results1, fields1) => {
                         const embed = new Discord.MessageEmbed()

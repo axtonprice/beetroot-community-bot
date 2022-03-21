@@ -37,8 +37,8 @@ module.exports = (bot, client, message) => {
     })
 
     bot.on("ready", () => {
-        const me = bot.channels.cache.get("954596313197080586");
-        me.send(`I'm online!`);
+        var channel = client.channels.cache.get("954596313197080586");
+        channel.send("Online and waiting..");
     })
     /*
     END Custom Event Modules

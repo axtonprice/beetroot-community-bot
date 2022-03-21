@@ -47,7 +47,7 @@ module.exports = {
                         { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                         { name: 'Global Statistics', value: `Top User: \`$${highestBalance}\` - \`${highestBalanceStoreName}\`\nTotal Stores: \`${totalStoreCount}\``, inline: true },
                         { name: 'Manage Your Store', value: `\`\`\`${prefix}store work » Begin working to earn cash\n${prefix}store delete » Delete your store\`\`\``, inline: false },
-                        { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy » Buy an item from a users store\`\`\``, inline: false },
+                        { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy » Buy an item from a users store\n${prefix}store browse » View list of popular stores\`\`\``, inline: false },
                         // \n${prefix}store buy <store-id> <item-id> » Buy an item from a store
                     );
                 message.reply({ embeds: [embed] });

@@ -28,28 +28,32 @@ module.exports = {
             */
 
             function generalDisplay() {
-                // Global Stats Variables
-                var highestBalance = 0;
-                var highestBalanceUser = "Artisan_#4387";
-                var highestBalanceStoreName = `Artisan_'s Store`;
-                var totalStoreCount = "1";
-                var totalStoresBalance = "100";
-                // User Stats Variables
-                var authorStoreBalance = 0;
-                var authorStoreName = `${authorUserName}'s Store`;
-                var authorTotalSoldItems = 0;
-                const embed = new Discord.MessageEmbed()
-                    .setTitle('Beetroot Drugstore :pill:')
-                    .setAuthor(message.author.tag, message.guild.iconURL())
-                    .setThumbnail(message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Welcome back, **${authorUserName}**! \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
-                    .addFields(
-                        { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
-                        { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },
-                        { name: 'Manage Your Store', value: `\`\`\`${prefix}store work » Begin working to earn cash\n${prefix}store delete » Delete your store\`\`\``, inline: false },
-                        { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy » Buy an item from a users store\n${prefix}store browse » View list of popular stores\`\`\``, inline: false },
-                    );
-                message.reply({ embeds: [embed] });
+                connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
+                    json = JSON.parse(results[0].response);
+
+                    // Global Stats Variables
+                    var highestBalance = 0;
+                    var highestBalanceUser = "Artisan_#4387";
+                    var highestBalanceStoreName = `Artisan_'s Store`;
+                    var totalStoreCount = "1";
+                    var totalStoresBalance = "100";
+                    // User Stats Variables
+                    var authorStoreBalance = json.components.store_details.store_balance;
+                    var authorStoreName = json.components.store_details.store_name;
+                    var authorTotalSoldItems = 0;
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle('Beetroot Drugstore :pill:')
+                        .setAuthor(message.author.tag, message.guild.iconURL())
+                        .setThumbnail(message.author.avatarURL({ dynamic: true }))
+                        .setDescription(`Welcome back, **${authorUserName}**! \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
+                        .addFields(
+                            { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
+                            { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },
+                            { name: 'Manage Your Store', value: `\`\`\`${prefix}store work » Begin working to earn cash\n${prefix}store delete » Delete your store\`\`\``, inline: false },
+                            { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy » Buy an item from a users store\n${prefix}store browse » View list of popular stores\`\`\``, inline: false },
+                        );
+                    message.reply({ embeds: [embed] });
+                });
             }
             function myStoreCreate() {
                 var authorUserId = message.author.id;

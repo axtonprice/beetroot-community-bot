@@ -18,6 +18,7 @@
     "nodemailer": "^6.7.2",
     "ping": "^0.4.1",
     "simple-ddos": "^2.0.4",
+    "semantic-release": "^15.13.0",
     "systeminformation": "^5.9.15",
     "time-until": "^1.0.0",
     "utf-8-validate": "^5.0.7"

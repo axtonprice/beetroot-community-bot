@@ -43,7 +43,7 @@ module.exports = {
                     .addFields(
                         { name: 'Your Statistics', value: `\`\`\`Your Store Balance: $${authorStoreBalance}  \`\`\``, inline: true },
                         { name: 'Global Statistics', value: `\`\`\`Top Balance: $${highestBalance} - ${highestBalanceStoreName}\`\`\``, inline: true },
-                        { name: 'Manage Your Store', value: `\`\`\`${prefix}drugstore work - Begin working to earn cash\n${prefix}drugstore buy <store-id> <item-id> - Buy an item from another user's store\n${prefix}drugstore delete - Delete your store\`\`\``, inline: false },
+                        { name: 'Manage Your Store', value: `\`\`\`${prefix}drugstore work - Begin working to earn cash\n${prefix}drugstore buy <store-id> <item-id> - Buy an item from a store\n${prefix}drugstore delete - Delete your store\`\`\``, inline: false },
                     );
                 message.reply({ embeds: [embed] });
             }

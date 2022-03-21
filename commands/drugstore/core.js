@@ -99,11 +99,11 @@ module.exports = {
                 var randomNumber = Math.floor(Math.random() * 10);
 
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
-                    json = results[0].response;
+                    json = JSON.parse(results[0].response);
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`response = ${JSON.parse(json.components)}`);
+                        .setDescription(`response = ${json.components}`);
                     message.reply({ embeds: [embed] });
                 });
 

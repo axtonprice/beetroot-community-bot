@@ -103,7 +103,7 @@ module.exports = {
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`response = ${json.components[store_details][store_name]}`);
+                        .setDescription(`response = ${json.components[`store_details`][`store_name`]}`);
                     message.reply({ embeds: [embed] });
                 });
 

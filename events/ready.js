@@ -36,10 +36,9 @@ module.exports = (bot, client, message) => {
         }
     })
 
-    bot.once("ready", () => {
-        var channel = bot.channels.cache.get("954596313197080586");
-        channel.send("Online and waiting..");
-    })
+    client.once('ready', () => {
+        console.log('Ready!');
+    });
     /*
     END Custom Event Modules
     */

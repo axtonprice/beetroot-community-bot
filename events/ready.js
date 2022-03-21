@@ -25,13 +25,12 @@ module.exports = (bot, client, message) => {
     Custom Event Modules:
     */
     bot.on('messageCreate', message => {
-        if (message.content === "<@!949884881486372924>") {
+        if (message.content === `<@!${bot.user.id}>`) {
             const embed = new Discord.MessageEmbed()
                 .setTitle('Hello! 👋')
-                .setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
-                .setDescription(`My prefix here is \`${prefix}\`. Use this at the start of your message to execute a command. **Need extra support?** Join the [Discord](https://discord.gg/dP3MuBATGc)`)
+                .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                .setDescription(`My prefix here is \`${prefix}\`. Use this at the start of your message to execute a command.`)
                 .setTimestamp()
-                .setFooter(bot.user.username, bot.user.avatarURL({ dynamic: true }));
             message.reply({ embeds: [embed] });
         }
     })

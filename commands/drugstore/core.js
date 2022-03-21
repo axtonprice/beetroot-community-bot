@@ -98,18 +98,17 @@ module.exports = {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
 
-                connection.query("SELECT `store_data` AS response FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => {
+                connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
 
                     json = JSON.parse(results[0].response);
-                    function randomInteger(min, max) {
-                        return Math.floor(Math.random() * (max - min + 1)) + min;
-                    }
-                    json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomInteger(85, 100);
+                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                    var randomNum = randomInteger(85, 100);
+                    json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`:thumbsup: You worked for 5 hours and received \`+ $${randomNumber}\`!`);
+                        .setDescription(`:thumbsup: You worked for 5 hours and received \`+ $${randomNum}\`!`);
                     message.reply({ embeds: [embed] });
 
                 });

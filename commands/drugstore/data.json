@@ -1,10 +1,10 @@
 {
 	"components": {
 		"store_details": {
-			"store_name": "My Methlab",
+			"store_name": "Axton's Drugstore",
 			"store_description": "My awesome drugstore!",
 			"last_purchase": "2022-03-19 03:42:21.000000",
-			"store_balance": "0",
+			"store_balance": "99999",
 			"work_again_date": "2022-03-21 03:42:21.000000"
 		},
 		"store_menu": {

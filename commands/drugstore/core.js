@@ -5,7 +5,7 @@ const prefix = env.PREFIX;
 const mysql = require("mysql");
 const moment = require('moment');
 const log = console.log.bind(console);
-
+const axios = require("axios");
 
 /*  
     Beetroot Drugstore System
@@ -27,6 +27,18 @@ module.exports = {
                 Core Functions
             */
 
+            function jsonModifyRequest(userId, changeKey, changeValue) {
+                // `https://api.axtonprice.com/v1/beetroot/modifyJson?userId=${userId}&changeKey=${changeKey}&changeValue=${changeValue}&auth=ytUbHkrHsFmJyErr`
+                axios.get(`https://api.axtonprice.com/v1/beetroot/modifyJson?userId=${userId}&changeKey=${changeKey}&changeValue=${changeValue}&auth=ytUbHkrHsFmJyErr`)
+                    .then(function (response) {
+                        // handle success
+                        log(`HTTP JSON modify request successfully made: ${response}`);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        log(`HTTP JSON modify request failed: ${error}`);
+                    })
+            }
             function generalDisplay() {
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
                     json = JSON.parse(results[0].response);
@@ -99,24 +111,29 @@ module.exports = {
                 var authorUserName = message.author.username;
 
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
-
                     json = JSON.parse(results[0].response);
-                    log(json.components.store_details.store_balance);
-                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-                    var randomNum = randomInteger(85, 100);
-                    json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
+                    // log(json.components.store_details.store_balance);
+                    var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
+                    if (hasCooldownPassed) {
+                        function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                        var randomNum = randomInteger(85, 100);
+                        json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
-                    jsonNew = json = parseInt(json.components.store_details.store_balance) + randomNum;
-                    json = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"My Methlab\",\n \"store_description\": \"My awesome drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"86\",\n \"work_again_date\": \"2022-03-21 03:42:21.000000\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
+                        value = parseInt(json.components.store_details.store_balance) + randomNum;
+                        jsonModifyRequest(authorUserId, "store_balance", value);
 
-                    connection.query("UPDATE `drug_stores` SET `store_data` = '" + json + "' WHERE `store_owner_id` = '" + message.author.id + "';", (error1, results1, fields1) => {
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
                             .setDescription(`:thumbsup: You worked for 6 hours and received \`+ $${randomNum}\`!`);
                         message.reply({ embeds: [embed] });
-                    });
-
+                    } else {
+                        const embed = new Discord.MessageEmbed()
+                            .setTitle('Beetroot Drugstore :pill:')
+                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                            .setDescription(`:thumbsup: Hey! You've already worked today! \nYou can work again in \`${moment(json.components.store_details.work_again_date).fromNow()}\`!`);
+                        message.reply({ embeds: [embed] });
+                    }
                 });
             }
 

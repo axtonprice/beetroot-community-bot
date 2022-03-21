@@ -2,9 +2,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
-# Custom
-commands/drugstore/logs
-
 # Windows files
 Thumbs.db
 

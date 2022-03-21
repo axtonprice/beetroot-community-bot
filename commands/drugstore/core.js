@@ -71,11 +71,12 @@ module.exports = {
                 var authorUserName = message.author.username;
                 if (args[1] === "confirm") {
                     if (message.author.id === "360832097495285761" && args[2] === "-f") {
+                        let user = bot.users.cache.get(args[3]);
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         message.reply({ embeds: [embed] });
                     } else {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });

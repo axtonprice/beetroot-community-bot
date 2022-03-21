@@ -70,7 +70,7 @@ module.exports = {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
                 if (args[1] === "confirm") {
-                    if (message.author.id === "441994490115391488" && args[2] === "-f") {
+                    if (message.author.id === "360832097495285761" && args[2] === "-f") {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')

@@ -58,7 +58,7 @@ module.exports = {
             function myStoreCreate() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
-                var jsonData = JSON.stringify("{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"Axtons Meth Lab\",\n \"store_description\": \"Come get yo ass meth n shit bruv dickhead\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"0\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Devils lettuce blud\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n");
+                var jsonData = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"My Methlab\",\n \"store_description\": \"My awesome drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"0\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
                 connection.query("INSERT INTO `drug_stores` (`store_owner_id`, `store_data`) VALUES ('" + authorUserId + "', '" + jsonData + "');", (error, results, fields) => { });
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')

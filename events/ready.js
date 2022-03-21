@@ -17,15 +17,15 @@ module.exports = (bot, client, message) => {
     const prefix = env.PREFIX;
     function debugLog(content) { console.log(`[${new Date().toDateString()} DEBUG] ${content}`); }
     // Startup
-    let statusmessage = `beetrootsmp.axtonprice.com`;
-    bot.user.setPresence({ statusmessage: "online" }); bot.user.setActivity(statusmessage, { type: "PLAYING" });
+    let statusmessage = `${prefix}drugstore | v1.0.1`;
+    bot.user.setPresence({ statusmessage: "online" }); bot.user.setActivity(statusmessage, { type: "WATCHING" });
     console.log(`\n---\nLogged in as ${bot.user.tag}!\n`);
 
     /* 
     Custom Event Modules:
     */
     bot.on('messageCreate', message => {
-        if (message.content === "<@!893989846903824404>") {
+        if (message.content === "<@!949884881486372924>") {
             const embed = new Discord.MessageEmbed()
                 .setTitle('Hello! 👋')
                 .setAuthor(message.author.username, message.author.avatarURL({ dynamic: true }))
@@ -35,12 +35,6 @@ module.exports = (bot, client, message) => {
             message.reply({ embeds: [embed] });
         }
     })
-    
-    // Auto name removal
-    bot.on("messageCreate", message => {
-        
-    })
-    
     /*
     END Custom Event Modules
     */

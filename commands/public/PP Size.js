@@ -13,7 +13,7 @@ module.exports = {
         } else {
             var rand = Math.floor(Math.random() * 10);
             const emotes = [":smiling_face_with_3_hearts:", ":innocent:", ":yum:", ":partying_face:", ":nerd:", ":sneezing_face:", ":thermometer_face:"];
-            const randEmote = Math.floor(Math.random() * months.length);
+            const randEmote = Math.floor(Math.random() * emotes.length);
             message.reply(`hmm... ${args[0]} you're a solid ${rand} inches ${randEmote, emotes[randEmote]}`);
         }
 

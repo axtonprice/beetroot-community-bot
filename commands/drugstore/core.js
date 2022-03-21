@@ -36,6 +36,7 @@ module.exports = {
                 // User Stats Variables
                 var authorStoreBalance = 0;
                 var authorStoreName = `${authorUserName }'s Store`;
+                var authorTotalSoldItems = 0;
 
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
@@ -43,7 +44,7 @@ module.exports = {
                     .setThumbnail(message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Welcome back, **${authorUserName}**. \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
                     .addFields(
-                        { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\``, inline: true },
+                        { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                         { name: 'Global Statistics', value: `Top User: \`$${highestBalance}\` - \`${highestBalanceStoreName}\`\nTotal Stores: \`${totalStoreCount}\``, inline: true },
                         { name: 'Manage Your Store', value: `\`\`\`${prefix}store work » Begin working to earn cash\n${prefix}store delete » Delete your store\`\`\``, inline: false },
                         { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy <store-id> <item-id> » Buy an item from a store\`\`\``, inline: false },

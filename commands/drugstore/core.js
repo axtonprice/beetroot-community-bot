@@ -42,7 +42,7 @@ module.exports = {
                     .setTitle('Beetroot Drugstore :pill:')
                     .setAuthor(message.author.tag, message.guild.iconURL())
                     .setThumbnail(message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Welcome back, **${authorUserName}**. \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
+                    .setDescription(`Welcome back, **${authorUserName}**! \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
                     .addFields(
                         { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                         { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },

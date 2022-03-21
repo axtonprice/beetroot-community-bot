@@ -123,7 +123,7 @@ module.exports = {
             }
 
             /* 
-                Function Loader Handler 
+                Function Loading Handler 
             */
 
             if (args[0] === "create") {

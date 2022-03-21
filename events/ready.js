@@ -17,7 +17,8 @@ module.exports = (bot, client, message) => {
     const prefix = env.PREFIX;
     function debugLog(content) { console.log(`[${new Date().toDateString()} DEBUG] ${content}`); }
     // Startup
-    let statusmessage = `${prefix}drugstore | v1.0.1`;
+    // let statusmessage = `${prefix}drugstore | v1.0.1`;
+    let statusmessage = `Beetroot Community | v1.0.1`;
     bot.user.setPresence({ statusmessage: "online" }); bot.user.setActivity(statusmessage, { type: "WATCHING" });
     console.log(`\n---\nLogged in as ${bot.user.tag}!\n`);
 
@@ -36,7 +37,7 @@ module.exports = (bot, client, message) => {
     })
 
     var channel = bot.channels.cache.get("954596313197080586");
-    channel.send("Online and waiting..");
+    // channel.send("Online and waiting..");
     /*
     END Custom Event Modules
     */

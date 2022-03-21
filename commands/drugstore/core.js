@@ -93,6 +93,21 @@ module.exports = {
                 message.reply({ embeds: [embed] });
             }
 
+            function testGetJson() {
+                var authorUserId = message.author.id;
+                var authorUserName = message.author.username;
+                var randomNumber = Math.floor(Math.random() * 10);
+
+                connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle('Beetroot Drugstore :pill:')
+                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                        .setDescription(`response = ${results[0].response}`);
+                    message.reply({ embeds: [embed] });
+                });
+
+            }
+
             /* 
                 Function Loader Handler 
             */
@@ -103,6 +118,8 @@ module.exports = {
                 myStoreDelete(); // Delete users drugstore
             } else if (args[0] === "work") {
                 economyStartWorking(); // Delete users drugstore
+            } else if (args[0] === "test") {
+                testGetJson(); // test function
             } else {
                 generalDisplay(); // User has a store, display main page
             }

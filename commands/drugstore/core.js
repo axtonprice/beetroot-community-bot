@@ -45,7 +45,7 @@ module.exports = {
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.guild.iconURL())
                         .setThumbnail(message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`Welcome back, **${authorUserName}**! \nManage your drugstore or view accessible commands to navigate the Beetroot economy!\n`)
+                        .setDescription(`Manage your drugstore or view economy commands to buy or browse items!\n`)
                         .addFields(
                             { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                             { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },
@@ -97,14 +97,22 @@ module.exports = {
             function economyStartWorking() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
-                var randomNumber = Math.floor(Math.random() * 10);
 
-                connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
-                const embed = new Discord.MessageEmbed()
-                    .setTitle('Beetroot Drugstore :pill:')
-                    .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                message.reply({ embeds: [embed] });
+                connection.query("SELECT `store_data` AS response FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => {
+
+                    json = JSON.parse(results[0].response);
+                    function randomInteger(min, max) {
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+                    json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomInteger(85, 100);
+
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle('Beetroot Drugstore :pill:')
+                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                        .setDescription(`:thumbsup: You worked for 5 hours and received \`+ $${randomNumber}\`!`);
+                    message.reply({ embeds: [embed] });
+
+                });
             }
 
             function testGetJson() {

@@ -30,7 +30,6 @@ module.exports = {
             function generalDisplay() {
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
                     json = JSON.parse(results[0].response);
-
                     // Global Stats Variables
                     var highestBalance = 0;
                     var highestBalanceUser = "Artisan_#4387";

@@ -120,7 +120,6 @@ module.exports = {
                         .setDescription(`response = ${json.components.store_details.store_name}`);
                     message.reply({ embeds: [embed] });
                 });
-
             }
 
             /* 

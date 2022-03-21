@@ -1,14 +1,16 @@
 {
 	"components": {
 		"store_details": {
-			"store_name": "Axton's Meth Lab",
-			"store_description": "Come get yo ass meth n shit bruv dickhead",
-			"last_purchase": "2022-03-19 03:42:21.000000"
+			"store_name": "My Methlab",
+			"store_description": "My awesome drugstore!",
+			"last_purchase": "2022-03-19 03:42:21.000000",
+			"store_balance": "0",
+			"work_again_date": "2022-03-21 03:42:21.000000"
 		},
 		"store_menu": {
 			"001": {
 				"drug_name": "Weed",
-				"drug_description": "Devils lettuce blud",
+				"drug_description": "Green devils lettuce",
 				"date_added": "2022-03-19 03:42:21.000000"
 			}
 		},

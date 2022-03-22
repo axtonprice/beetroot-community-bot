@@ -28,7 +28,6 @@ module.exports = {
             */
 
             function jsonModifyRequest(userId, changeKey, changeValue) {
-                // `https://api.axtonprice.com/v1/beetroot/modifyJson?userId=${userId}&changeKey=${changeKey}&changeValue=${changeValue}&auth=ytUbHkrHsFmJyErr`
                 axios.get(`https://api.axtonprice.com/v1/beetroot/modifyJson?userId=${userId}&changeKey=${changeKey}&changeValue=${changeValue}&auth=ytUbHkrHsFmJyErr`)
                     .then(function (response) {
                         // handle success
@@ -112,7 +111,6 @@ module.exports = {
 
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
                     json = JSON.parse(results[0].response);
-                    // log(json.components.store_details.store_balance);
                     var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
                     if (hasCooldownPassed) {
                         function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -120,7 +118,8 @@ module.exports = {
                         json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
                         value = parseInt(json.components.store_details.store_balance) + randomNum;
-                        jsonModifyRequest(authorUserId, "store_balance", value);
+                        jsonModifyRequest(authorUserId, "store_balance", randomNum);
+                        jsonModifyRequest(authorUserId, "work_again_date", null);
 
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
@@ -131,7 +130,7 @@ module.exports = {
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`:thumbsup: Hey! You've already worked today! \nYou can work again in \`${moment(json.components.store_details.work_again_date).fromNow()}\`!`);
+                            .setDescription(`*Hey!* You've already worked today! \nYou can work again ${moment(json.components.store_details.work_again_date).fromNow()}!`);
                         message.reply({ embeds: [embed] });
                     }
                 });

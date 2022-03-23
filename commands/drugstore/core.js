@@ -17,7 +17,8 @@ module.exports = {
     name: "drugstore",
     aliases: ['drug', "store", "ds"],
     run: async (bot, message, args) => {
-        const init = () => {
+        // message.react("<a:loading:956273050482008074>");
+        const init = async () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
             connection.connect();
             var authorUserId = message.author.id;
@@ -39,137 +40,135 @@ module.exports = {
             async function noStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ff0000')
-                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}store create\` to create a new drugstore!`);
+                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}drugstore create\` to create a new drugstore!`);
                 message.reply({ embeds: [embed] });
             }
             async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
-                    .setColor('#EFCD37')
-                    .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}store\` to view drugstore commands!`);
+                    .setColor('#ff0000')
+                    .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}drugstore\` to view drugstore commands!`);
                 message.reply({ embeds: [embed] });
             }
             async function generalDisplay() {
-                if (apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
-                    connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
-                        json = JSON.parse(results[0].response);
-                        // Global Stats Variables
-                        var highestBalance = 0;
-                        var highestBalanceUser = "Artisan_#4387";
-                        var highestBalanceStoreName = `Artisan_'s Store`;
-                        var totalStoreCount = "1";
-                        var totalStoresBalance = "100";
-                        // User Stats Variables
-                        var authorStoreBalance = json.components.store_details.store_balance;
-                        var authorStoreName = json.components.store_details.store_name;
-                        var authorTotalSoldItems = 0;
-                        const embed = new Discord.MessageEmbed()
-                            .setTitle('Beetroot Drugstore :pill:')
-                            .setAuthor(message.author.tag, message.guild.iconURL())
-                            .setThumbnail(message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`Manage your drugstore or view economy commands to buy or browse items!\n`)
-                            .addFields(
-                                { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
-                                { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },
-                                { name: 'Manage Your Store', value: `\`\`\`${prefix}store work      » Begin working to earn cash\n${prefix}store delete    » Delete your store\`\`\``, inline: false },
-                                { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy       » Buy an item from a users store\n${prefix}store browse    » View list of popular stores\`\`\``, inline: false },
-                            );
-                        message.reply({ embeds: [embed] });
-                    });
-                } else {
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
+                    return;
                 }
+                connection.query("SELECT `store_data` AS response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
+                    json = JSON.parse(results[0].response);
+                    // Global Stats Variables
+                    var highestBalance = 0;
+                    var highestBalanceUser = "Artisan_#4387";
+                    var highestBalanceStoreName = `Artisan_'s Store`;
+                    var totalStoreCount = "1";
+                    var totalStoresBalance = "100";
+                    // User Stats Variables
+                    var authorStoreBalance = json.components.store_details.store_balance;
+                    var authorStoreName = json.components.store_details.store_name;
+                    var authorTotalSoldItems = 0;
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle('Beetroot Drugstore :pill:')
+                        .setAuthor(message.author.tag, message.guild.iconURL())
+                        .setThumbnail(message.author.avatarURL({ dynamic: true }))
+                        .setDescription(`Manage your drugstore or view economy commands to buy or browse items!\n`)
+                        .addFields(
+                            { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
+                            { name: 'Global Statistics', value: `Top User: \`$${highestBalance} - ${highestBalanceUser}\`\nTotal Stores: \`${totalStoreCount} ($${totalStoresBalance})\``, inline: true },
+                            { name: 'Manage Your Store', value: `\`\`\`${prefix}store work      » Begin working to earn cash\n${prefix}store delete    » Delete your store\`\`\``, inline: false },
+                            { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy       » Buy an item from a users store\n${prefix}store browse    » View list of popular stores\`\`\``, inline: false },
+                        );
+                    message.reply({ embeds: [embed] });
+                });
+
             }
             async function myStoreCreate() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
 
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
-                    var jsonData = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"New Drugstore\",\n \"store_description\": \"My new drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"0\",\n \"work_again_date\": \"2022-03-21 03:42:21.000000\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
-                    connection.query("INSERT INTO `drug_stores` AS response (`store_owner_id`, `store_data`) VALUES ('" + authorUserId + "', '" + jsonData + "')", (error, results, fields) => { log(error); });
-                    const embed = new Discord.MessageEmbed()
-                        .setTitle('Beetroot Drugstore :pill:')
-                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`Successfully created \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                    message.reply({ embeds: [embed] });
-                } else {
                     alreadyHaveStoreDisplay();
+                    return;
                 }
+                await apiRequest(`insertData?userId=${authorUserId}`); // insert data reqest
+                const embed = new Discord.MessageEmbed()
+                    .setTitle('Beetroot Drugstore :pill:')
+                    .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                    .setDescription(`Successfully created \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                message.reply({ embeds: [embed] });
             }
             async function myStoreDelete() {
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                    noStoreDisplay();
+                    return;
+                }
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
-                    if (args[1] === "confirm") {
-                        if (message.author.id === "360832097495285761" && args[2] === "-f") {
-                            let user = bot.users.cache.get(args[3]);
-                            connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
-                            const embed = new Discord.MessageEmbed()
-                                .setTitle('Beetroot Drugstore :pill:')
-                                .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                                .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                            message.reply({ embeds: [embed] });
-                        } else {
-                            connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
-                            const embed = new Discord.MessageEmbed()
-                                .setColor('#00ff00')
-                                .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                            message.reply({ embeds: [embed] });
-                        }
-                    } else {
+                if (args[1] === "confirm") {
+                    if (message.author.id === "360832097495285761" && args[2] === "-f") {
+                        let user = bot.users.cache.get(args[3]);
+                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
+                            .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                        message.reply({ embeds: [embed] });
+                    } else {
+                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
+                        const embed = new Discord.MessageEmbed()
+                            .setColor('#00ff00')
+                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         message.reply({ embeds: [embed] });
                     }
                 } else {
-                    noStoreDisplay();
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle('Beetroot Drugstore :pill:')
+                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                        .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
+                    message.reply({ embeds: [embed] });
                 }
             }
             async function economyStartWorking() {
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                    noStoreDisplay();
+                    return;
+                }
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
+                connection.query("SELECT `store_data` AS response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
+                    json = JSON.parse(results[0].response);
+                    json = results.response;
+                    log(error);
+                    var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
+                    if (hasCooldownPassed) {
+                        function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                        var randomNum = randomInteger(85, 100);
+                        json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
-                    connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
-                        json = JSON.parse(results[0].response);
-                        var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
-                        if (hasCooldownPassed) {
-                            function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-                            var randomNum = randomInteger(85, 100);
-                            json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
+                        value = parseInt(json.components.store_details.store_balance) + randomNum;
+                        apiRequest(`modifyJson?userId=${userId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
+                        apiRequest(`modifyJson?userId=${userId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
 
-                            value = parseInt(json.components.store_details.store_balance) + randomNum;
-                            apiRequest(`modifyJson?userId=${userId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
-                            apiRequest(`modifyJson?userId=${userId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
-
-                            const embed = new Discord.MessageEmbed()
-                                .setColor('#00ff00')
-                                .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
-                            message.reply({ embeds: [embed] });
-                        } else {
-                            const embed = new Discord.MessageEmbed()
-                                .setColor('#ff0000')
-                                .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
-                            message.reply({ embeds: [embed] });
-                        }
-                    });
-                } else {
-                    noStoreDisplay();
-                }
+                        const embed = new Discord.MessageEmbed()
+                            .setColor('#00ff00')
+                            .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
+                        message.reply({ embeds: [embed] });
+                    } else {
+                        const embed = new Discord.MessageEmbed()
+                            .setColor('#ff0000')
+                            .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(apiRequest(`requestData?fetchData=store_data&userId=${message.author.id}`).components.store_details.work_again_date).fromNow()}**!`)
+                        message.reply({ embeds: [embed] });
+                    }
+                });
             }
 
             async function test() {
-                log(await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`));
-
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
-                    const resp = apiRequest(`requestData?fetchData=doesStoreExist&userId=${message.author.id}`);
-                    const embed = new Discord.MessageEmbed()
-                        .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
-                    message.reply({ embeds: [embed] });
-                } else {
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
+                    return;
                 }
+                const embed = new Discord.MessageEmbed()
+                    .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
+                message.reply({ embeds: [embed] });
             }
 
             /* 
@@ -190,6 +189,7 @@ module.exports = {
 
             connection.end();
         };
-        init();
+        await init();
+        // message.reactions.removeAll();
     }
 }

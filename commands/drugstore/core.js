@@ -36,7 +36,18 @@ module.exports = {
                     .catch(function (error) {
                         // handle error
                         log(`HTTP JSON modify request failed: ${error}`);
+                    });
+            }
+            function jsonDataRequest(userId, requestType) {
+                axios.get(`https://api.axtonprice.com/v1/beetroot/requestData?userId=${userId}&requestType=${requestType}&auth=ytUbHkrHsFmJyErr`)
+                    .then(function (response) {
+                        // handle success
+                        log(`HTTP JSON modify request successfully made: ${response}`);
                     })
+                    .catch(function (error) {
+                        // handle error
+                        log(`HTTP JSON modify request failed: ${error}`);
+                    });
             }
             function generalDisplay() {
                 connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
@@ -119,18 +130,14 @@ module.exports = {
 
                         value = parseInt(json.components.store_details.store_balance) + randomNum;
                         jsonModifyRequest(authorUserId, "store_balance", randomNum);
-                        jsonModifyRequest(authorUserId, "work_again_date", null);
+                        jsonModifyRequest(authorUserId, "work_again_date", null); // sets work cooldown
 
                         const embed = new Discord.MessageEmbed()
-                            .setTitle('Beetroot Drugstore :pill:')
-                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`:thumbsup: You worked for 6 hours and received \`+ $${randomNum}\`!`);
+                            .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
                         message.reply({ embeds: [embed] });
                     } else {
                         const embed = new Discord.MessageEmbed()
-                            .setTitle('Beetroot Drugstore :pill:')
-                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`*Hey!* You've already worked today! \nYou can work again ${moment(json.components.store_details.work_again_date).fromNow()}!`);
+                            .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
                         message.reply({ embeds: [embed] });
                     }
                 });

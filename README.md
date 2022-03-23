@@ -20,7 +20,6 @@ Then, start the bot
 ```
 
 ## Screenshots
-<br>
 <img src="https://cdn.discordapp.com/attachments/954596313197080586/956219076072575036/eRe9jP9zvI.png"><br>
 <img src="https://cdn.discordapp.com/attachments/954596313197080586/956219252589858816/fQYsbXn1yc.png">
 <img src="https://cdn.discordapp.com/attachments/954596313197080586/956219331195310160/L7vwl1ATU6.png">

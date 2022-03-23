@@ -16,7 +16,7 @@ const axios = require("axios");
 module.exports = {
     name: "drugstore",
     aliases: ['drug', "store", "ds"],
-    run: (bot, message, args) => {
+    run: async (bot, message, args) => {
         const init = () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
             connection.connect();
@@ -30,29 +30,28 @@ module.exports = {
             const apiRequest = async path => {
                 try {
                     const resp = await axios.get(`https://api.axtonprice.com/v1/beetroot/${path}&auth=ytUbHkrHsFmJyErr`);
-                    log(resp.data.data);
+                    // log(resp.data.data);
                     return resp.data.data
                 } catch (err) {
                     console.error(err)
                 }
             }
-            function noStoreDisplay() {
+            async function noStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ff0000')
-                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a store! Use \`${prefix}store create\` to create a new drugstore!`);
+                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}store create\` to create a new drugstore!`);
                 message.reply({ embeds: [embed] });
             }
-            function alreadyHaveStoreDisplay() {
+            async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#EFCD37')
-                    .setDescription(`<:890516515844157510:954613427991638076> You already have a store! Use \`${prefix}store\` to view store commands!`);
+                    .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}store\` to view drugstore commands!`);
                 message.reply({ embeds: [embed] });
             }
-            function generalDisplay() {
-                if (apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) == "true") {
+            async function generalDisplay() {
+                if (apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
                     connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + message.author.id + "'", (error, results, fields) => {
                         json = JSON.parse(results[0].response);
-
                         // Global Stats Variables
                         var highestBalance = 0;
                         var highestBalanceUser = "Artisan_#4387";
@@ -80,12 +79,13 @@ module.exports = {
                     noStoreDisplay();
                 }
             }
-            function myStoreCreate() {
-                if (apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) == "false") {
-                    var authorUserId = message.author.id;
-                    var authorUserName = message.author.username;
-                    var jsonData = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"My Methlab\",\n \"store_description\": \"My awesome drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"0\",\n \"work_again_date\": \"2022-03-21 03:42:21.000000\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
-                    connection.query("INSERT INTO `drug_stores` (`store_owner_id`, `store_data`) VALUES ('" + authorUserId + "', '" + jsonData + "');", (error, results, fields) => { });
+            async function myStoreCreate() {
+                var authorUserId = message.author.id;
+                var authorUserName = message.author.username;
+
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                    var jsonData = "{\n \"components\": {\n \"store_details\": {\n \"store_name\": \"New Drugstore\",\n \"store_description\": \"My new drugstore!\",\n \"last_purchase\": \"2022-03-19 03:42:21.000000\",\n \"store_balance\": \"0\",\n \"work_again_date\": \"2022-03-21 03:42:21.000000\"\n },\n \"store_menu\": {\n \"001\": {\n \"drug_name\": \"Weed\",\n \"drug_description\": \"Green devils lettuce\",\n \"date_added\": \"2022-03-19 03:42:21.000000\"\n }\n },\n \"store_customers\": {\n \"441994490115391488\": {\n \"item_id_purchase\": \"001\",\n \"sales_price\": \"100\",\n \"purchase_date\": \"2022-03-19 03:42:21.000000\"\n }\n }\n }\n}\n";
+                    connection.query("INSERT INTO `drug_stores` AS response (`store_owner_id`, `store_data`) VALUES ('" + authorUserId + "', '" + jsonData + "')", (error, results, fields) => { log(error); });
                     const embed = new Discord.MessageEmbed()
                         .setTitle('Beetroot Drugstore :pill:')
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
@@ -95,68 +95,77 @@ module.exports = {
                     alreadyHaveStoreDisplay();
                 }
             }
-            function myStoreDelete() {
+            async function myStoreDelete() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
-                if (args[1] === "confirm") {
-                    if (message.author.id === "360832097495285761" && args[2] === "-f") {
-                        let user = bot.users.cache.get(args[3]);
-                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
+                    if (args[1] === "confirm") {
+                        if (message.author.id === "360832097495285761" && args[2] === "-f") {
+                            let user = bot.users.cache.get(args[3]);
+                            connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
+                            const embed = new Discord.MessageEmbed()
+                                .setTitle('Beetroot Drugstore :pill:')
+                                .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                                .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            message.reply({ embeds: [embed] });
+                        } else {
+                            connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
+                            const embed = new Discord.MessageEmbed()
+                                .setColor('#00ff00')
+                                .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            message.reply({ embeds: [embed] });
+                        }
+                    } else {
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore :pill:')
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                            .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                        message.reply({ embeds: [embed] });
-                    } else {
-                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
-                        const embed = new Discord.MessageEmbed()
-                            .setColor('#00ff00')
-                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
                         message.reply({ embeds: [embed] });
                     }
                 } else {
-                    const embed = new Discord.MessageEmbed()
-                        .setTitle('Beetroot Drugstore :pill:')
-                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                        .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
-                    message.reply({ embeds: [embed] });
+                    noStoreDisplay();
                 }
             }
-            function economyStartWorking() {
+            async function economyStartWorking() {
                 var authorUserId = message.author.id;
                 var authorUserName = message.author.username;
 
-                connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
-                    json = JSON.parse(results[0].response);
-                    var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
-                    if (hasCooldownPassed) {
-                        function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-                        var randomNum = randomInteger(85, 100);
-                        json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
+                    connection.query("SELECT `store_data` as response FROM `drug_stores` WHERE `store_owner_id`='" + authorUserId + "'", (error, results, fields) => {
+                        json = JSON.parse(results[0].response);
+                        var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
+                        if (hasCooldownPassed) {
+                            function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                            var randomNum = randomInteger(85, 100);
+                            json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
-                        value = parseInt(json.components.store_details.store_balance) + randomNum;
-                        apiRequest(`modifyJson?userId=${userId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
-                        apiRequest(`modifyJson?userId=${userId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
+                            value = parseInt(json.components.store_details.store_balance) + randomNum;
+                            apiRequest(`modifyJson?userId=${userId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
+                            apiRequest(`modifyJson?userId=${userId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
 
-                        const embed = new Discord.MessageEmbed()
-                            .setColor('#00ff00')
-                            .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
-                        message.reply({ embeds: [embed] });
-                    } else {
-                        const embed = new Discord.MessageEmbed()
-                            .setColor('#ff0000')
-                            .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
-                        message.reply({ embeds: [embed] });
-                    }
-                });
+                            const embed = new Discord.MessageEmbed()
+                                .setColor('#00ff00')
+                                .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
+                            message.reply({ embeds: [embed] });
+                        } else {
+                            const embed = new Discord.MessageEmbed()
+                                .setColor('#ff0000')
+                                .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
+                            message.reply({ embeds: [embed] });
+                        }
+                    });
+                } else {
+                    noStoreDisplay();
+                }
             }
 
-            function test() {
-                log(apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`));
-                if (apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) == "false") {
+            async function test() {
+                log(await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`));
+
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
                     const resp = apiRequest(`requestData?fetchData=doesStoreExist&userId=${message.author.id}`);
                     const embed = new Discord.MessageEmbed()
-                        .setDescription(`${resp}`);
+                        .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
                     message.reply({ embeds: [embed] });
                 } else {
                     noStoreDisplay();

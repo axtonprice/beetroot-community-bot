@@ -8,10 +8,6 @@ module.exports = {
     aliases: ['saymessage', 'msg', 'repeat', 'repeatmessage', 'simonsays'],
     run: async (bot, message, args) => {
 
-        if (message.member.id !== "360832097495285761") {
-            return;
-        }
-
         if (message.member.permissions.has("ADMINISTRATOR")) {
             message.delete();
         }

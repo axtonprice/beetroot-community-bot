@@ -1,10 +1,4 @@
 {
-  "name": "beetroot-bot",
-  "version": "0.0.1",
-  "description": "by axtonprice",
-  "scripts": {
-    "start": "nodemon index.js"
-  },
   "dependencies": {
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.7.5",

@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 require("dotenv").config();
 const env = process.env;
 const prefix = env.PREFIX;
+const apitoken = env.APITOKEN;
 const mysql = require("mysql");
 const moment = require('moment');
 const log = console.log.bind(console);
@@ -41,7 +42,7 @@ module.exports = {
 
             const apiRequest = async path => {
                 try {
-                    const resp = await axios.get(`https://api.axtonprice.com/v1/beetroot/${path}&auth=ytUbHkrHsFmJyErr`);
+                    const resp = await axios.get(`https://api.axtonprice.com/v1/beetroot/${path}&auth=${apitoken}}`);
                     // log(resp.data.data);
                     return resp.data.data
                 } catch (err) {
@@ -50,7 +51,7 @@ module.exports = {
             }
             const getJson = async user => {
                 try {
-                    const resp = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData?fetchData=store_data&userId=${user}&auth=ytUbHkrHsFmJyErr`);
+                    const resp = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData?fetchData=store_data&userId=${user}&auth=${apitoken}`);
                     return resp.data
                 } catch (err) {
                     console.error(err)

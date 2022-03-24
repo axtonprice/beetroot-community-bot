@@ -87,20 +87,15 @@ module.exports = {
                 const data = await getJson(mId);
                 var highestBalanceStoreName = `Axton's Store`;
                 // Global Stats Variables
-                var axiosConfig = {
-                    headers: {
-                        userId: mId,
-                        auth: apitoken
-                    }
-                };
                 try {
-                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalance' } }, axiosConfig),
-                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalanceUser' } }, axiosConfig),
-                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoreCount' } }, axiosConfig),
-                        totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoresBalance' } }, axiosConfig);
+                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalance', auth: apitoken, userId: mId } }),
+                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalanceUser', auth: apitoken, userId: mId } }),
+                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoreCount', auth: apitoken, userId: mId } }),
+                        totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoresBalance', auth: apitoken, userId: mId } });
                 } catch (err) {
                     console.error(err);
                 };
+                log(totalStoresBalance);
                 // User Stats Variables
                 var authorStoreBalance = data.components.store_details.store_balance,
                     authorStoreName = data.components.store_details.store_name,

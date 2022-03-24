@@ -84,7 +84,7 @@ module.exports = {
                     noStoreDisplay();
                     return;
                 }
-                const data = await getJson(mId);
+                const data = await getJson(message.author.id);
                 var mId = message.author.id, highestBalanceStoreName = `Axton's Store`;
                 // Global Stats Variables
                 var axiosConfig = {

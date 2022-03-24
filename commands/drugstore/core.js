@@ -18,7 +18,7 @@ module.exports = {
     aliases: ['drug', "store", "ds"],
     run: async (bot, message, args) => {
         // message.react("<a:loading:956273050482008074>");
-        const init = async () => {
+        const init = () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
             connection.connect();
             var authorUserId = message.author.id;

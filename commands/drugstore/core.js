@@ -85,7 +85,7 @@ module.exports = {
                     return;
                 }
                 const mId = message.author.id;
-                const data = await getJson(message.author.id);
+                const data = await getJson(mId);
                 // Global Stats Variables
                 var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: apitoken } });
                 var highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: apitoken } });

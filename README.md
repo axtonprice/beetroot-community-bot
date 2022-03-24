@@ -32,3 +32,5 @@ You will also need to add the following environment variables to your `.env` fil
 
 `TOKEN`
 `PREFIX`
+`APITOKEN`*
+Note: Please obtain an API token by contacting me directly: Axton P.#1234

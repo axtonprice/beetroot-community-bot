@@ -45,6 +45,12 @@ module.exports = {
                     console.error(err)
                 }
             }
+            async function scrubDatabase() {
+                connection.query("ALTER TABLE `drug_stores` AUTO_INCREMENT = 0;", (error, results, fields) => {
+                    if (error) throw error;
+                    log("» Database Cleaned");
+                });
+            }
             async function noStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ff0000')
@@ -134,38 +140,6 @@ module.exports = {
                     message.reply({ embeds: [embed] });
                 }
             }
-            async function economyStartWorking() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
-                    noStoreDisplay();
-                    return;
-                }
-                var authorUserId = message.author.id;
-                var authorUserName = message.author.username;
-                const data = await getJson(authorUserId);
-                json = data;
-                var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
-                if (hasCooldownPassed) {
-                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-                    var randomNum = randomInteger(85, 100);
-                    json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
-
-                    value = parseInt(json.components.store_details.store_balance) + randomNum;
-                    apiRequest(`modifyJson?userId=${authorUserId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
-                    apiRequest(`modifyJson?userId=${authorUserId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
-
-                    const embed = new Discord.MessageEmbed()
-                        .setColor('#00ff00')
-                        .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
-                    message.reply({ embeds: [embed] });
-                } else {
-                    const json = await getJson(message.author.id);
-                    const embed = new Discord.MessageEmbed()
-                        .setColor('#ff0000')
-                        .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
-                    message.reply({ embeds: [embed] });
-                }
-            }
-
             async function test() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
@@ -181,15 +155,16 @@ module.exports = {
             */
 
             if (args[0] === "create") {
-                myStoreCreate(); // Create a new drugstore
+                myStoreCreate();
+                scrubDatabase();
             } else if (args[0] === "delete") {
-                myStoreDelete(); // Delete users drugstore
-            } else if (args[0] === "work") {
-                economyStartWorking(); // Delete users drugstore
+                myStoreDelete();
+                scrubDatabase();
             } else if (args[0] === "test") {
-                test(); // Delete users drugstore
+                test();
+                scrubDatabase();
             } else {
-                generalDisplay(); // User has a store, display main page
+                generalDisplay();
             }
 
             connection.end();

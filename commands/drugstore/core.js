@@ -81,7 +81,6 @@ module.exports = {
                     return;
                 }
                 const data = await getJson(message.author.id);
-                json = data;
                 // Global Stats Variables
                 var mId = message.author.id;
                 try {
@@ -94,7 +93,7 @@ module.exports = {
                     console.error(err);
                 };
                 // User Stats Variables
-                var authorStoreBalance = json.components.store_details.store_balance,
+                var authorStoreBalance = data.components.store_details.store_balance,
                     authorStoreName = data.components.store_details.store_name,
                     authorTotalSoldItems = 0;
                 const embed = new Discord.MessageEmbed()

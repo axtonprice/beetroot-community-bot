@@ -84,6 +84,7 @@ module.exports = {
                     noStoreDisplay();
                     return;
                 }
+                const mId = message.author.id;
                 const data = await getJson(message.author.id);
                 // Global Stats Variables
                 var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: 'ytUbHkrHsFmJyErr' } });

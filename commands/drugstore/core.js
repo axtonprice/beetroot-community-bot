@@ -87,15 +87,24 @@ module.exports = {
                 const mId = message.author.id;
                 const data = await getJson(mId);
                 // Global Stats Variables
-                var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: apitoken } });
-                var highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: apitoken } });
-                var highestBalanceStoreName = `Artisan_'s Store`;
-                var totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoreCount', auth: apitoken } });
-                var totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoresBalance', auth: apitoken } });
+                var axiosConfig = {
+                    headers: {
+                        userId: mId,
+                        auth: 'ytUbHkrHsFmJyErr'
+                    }
+                };
+                try {
+                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalance' } }, axiosConfig),
+                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalanceUser' } }, axiosConfig),
+                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoreCount' } }, axiosConfig),
+                        totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoresBalance' } }, axiosConfig);
+                } catch (err) {
+                    console.error(err);
+                };
                 // User Stats Variables
-                var authorStoreBalance = data.components.store_details.store_balance;
-                var authorStoreName = data.components.store_details.store_name;
-                var authorTotalSoldItems = 0;
+                var authorStoreBalance = data.components.store_details.store_balance,
+                    authorStoreName = data.components.store_details.store_name,
+                    authorTotalSoldItems = 0;
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
                     .setAuthor(message.author.tag, message.guild.iconURL())

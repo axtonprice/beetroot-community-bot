@@ -33,4 +33,5 @@ You will also need to add the following environment variables to your `.env` fil
 `TOKEN`
 `PREFIX`
 `APITOKEN`*<br>
-Note: Please obtain an API token by contacting me directly: Axton P.#1234
+Note: Please obtain an API token by contacting me directly: Axton P.#1234<br>
+Altenatively, you can create your own endpoints :D

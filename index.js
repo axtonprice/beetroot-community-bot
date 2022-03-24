@@ -14,6 +14,7 @@ const path = require('path');
 const config = process.env;
 const PREFIX = process.env.PREFIX;
 fs.readdir(path.join(__dirname, 'events')).then(files => { files.forEach(file => { if (!file.endsWith(".js")) return; let eventName = file.substring(0, file.indexOf(".js")); let eventModule = require(path.join(__dirname, 'events', eventName)); bot.on(eventName, eventModule.bind(null, bot)); }) }).catch(err => console.log(err));["command"].forEach(handler => { require(`./handler/${handler}`)(bot); })
+
 bot.on("messageCreate", async message => {
     if (message.author.bot) return;
     if (message.channel.type === "dm") return;
@@ -27,4 +28,5 @@ bot.on("messageCreate", async message => {
     if (!command) command = bot.commands.get(bot.aliases.get(cmd));
     if (command) command.run(bot, message, args);
 });
+
 bot.login(process.env.TOKEN);

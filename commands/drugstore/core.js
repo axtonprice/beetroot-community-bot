@@ -19,23 +19,23 @@ module.exports = {
     aliases: ['drug', "store", "ds"],
     run: async (bot, message, args) => {
 
-        if (message.author.id != "360832097495285761") {
-            if (message.author.id != "441994490115391488") {
+        var mId = message.author.id;
+        var mUs = message.author.username;
+
+        if (mId != "360832097495285761") {
+            if (mId != "441994490115391488") {
                 message.channel.send("<:890516515844157510:954613427991638076> You do not have permission to use this command, as it is still under development!");
                 return;
             }
         }
 
         const preInitializationDate = new Date();
-        // message.react("<a:loading:956273050482008074>");
         const thinkingEmbed = new Discord.MessageEmbed().setDescription(`Gimme a sec to proccess what the fuck you just typed..`);
         const thinking = await message.reply({ embeds: [thinkingEmbed] });
 
         const init = () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
             connection.connect();
-            var authorUserId = message.author.id;
-            var authorUserName = message.author.username;
 
             /* 
                 Core Functions
@@ -80,12 +80,12 @@ module.exports = {
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function generalDisplay() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                if (await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
-                const data = await getJson(message.author.id);
-                var mId = message.author.id, highestBalanceStoreName = `Axton's Store`;
+                const data = await getJson(mId);
+                var highestBalanceStoreName = `Axton's Store`;
                 // Global Stats Variables
                 var axiosConfig = {
                     headers: {
@@ -120,10 +120,8 @@ module.exports = {
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreCreate() {
-                var authorUserId = message.author.id;
-                var authorUserName = message.author.username;
 
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
+                if (await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`) === "true") {
                     alreadyHaveStoreDisplay();
                     return;
                 }
@@ -131,19 +129,17 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
                     .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Successfully created \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                    .setDescription(`Successfully created \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreDelete() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                if (await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
-                var authorUserId = message.author.id;
-                var authorUserName = message.author.username;
                 if (args[1] === "confirm") {
-                    if (message.author.id === "360832097495285761" && args[2] === "-f") {
+                    if (mId === "360832097495285761" && args[2] === "-f") {
                         let user = bot.users.cache.get(args[3]);
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
@@ -156,7 +152,7 @@ module.exports = {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setColor('#00ff00')
-                            .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            .setDescription(`Successfully deleted \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         thinking.edit({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     }
@@ -170,12 +166,10 @@ module.exports = {
                 }
             }
             async function economyStartWorking() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                if (await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
-                var authorUserId = message.author.id;
-                var authorUserName = message.author.username;
                 const data = await getJson(authorUserId);
                 json = data;
                 var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
@@ -194,7 +188,7 @@ module.exports = {
                     thinking.edit({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
-                    const json = await getJson(message.author.id);
+                    const json = await getJson(mId);
                     const embed = new Discord.MessageEmbed()
                         .setColor('#ff0000')
                         .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
@@ -204,12 +198,12 @@ module.exports = {
             }
 
             async function test() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                if (await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
                 const embed = new Discord.MessageEmbed()
-                    .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
+                    .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${mId}&fetchData=doesStoreExist`)}\``);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }

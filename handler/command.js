@@ -1,5 +1,4 @@
 const { readdirSync } = require("fs");
-
 const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load status");
 
@@ -20,8 +19,7 @@ module.exports = (bot) => {
                 continue;
             }
 
-            if (pull.aliases && Array.isArray(pull.aliases))
-                pull.aliases.forEach(aliases => bot.aliases.set(aliases, pull.name));
+            if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(aliases => bot.aliases.set(aliases, pull.name));
         }
     })
 }

@@ -87,11 +87,11 @@ module.exports = {
                 const mId = message.author.id;
                 const data = await getJson(message.author.id);
                 // Global Stats Variables
-                var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: 'ytUbHkrHsFmJyErr' } });
-                var highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: 'ytUbHkrHsFmJyErr' } });
+                var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: apitoken } });
+                var highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: apitoken } });
                 var highestBalanceStoreName = `Artisan_'s Store`;
-                var totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoreCount', auth: 'ytUbHkrHsFmJyErr' } });
-                var totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoresBalance', auth: 'ytUbHkrHsFmJyErr' } });
+                var totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoreCount', auth: apitoken } });
+                var totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoresBalance', auth: apitoken } });
                 // User Stats Variables
                 var authorStoreBalance = data.components.store_details.store_balance;
                 var authorStoreName = data.components.store_details.store_name;

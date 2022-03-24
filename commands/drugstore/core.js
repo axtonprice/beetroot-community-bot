@@ -26,6 +26,7 @@ module.exports = {
             }
         }
 
+        const preInitializationDate = new Date();
         // message.react("<a:loading:956273050482008074>");
         const thinkingEmbed = new Discord.MessageEmbed().setDescription(`Gimme a sec to proccess what the fuck you just typed..`);
         const thinking = await message.reply({ embeds: [thinkingEmbed] });
@@ -61,6 +62,7 @@ module.exports = {
                 connection.query("ALTER TABLE `drug_stores` AUTO_INCREMENT = 0;", (error, results, fields) => {
                     if (error) throw error;
                     log("» Database Cleaned");
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 });
             }
             async function noStoreDisplay() {
@@ -68,12 +70,14 @@ module.exports = {
                     .setColor('#ff0000')
                     .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}drugstore create\` to create a new drugstore!`);
                 thinking.edit({ embeds: [embed] });
+                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ff0000')
                     .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}drugstore\` to view drugstore commands!`);
                 thinking.edit({ embeds: [embed] });
+                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function generalDisplay() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
@@ -82,20 +86,15 @@ module.exports = {
                 }
                 const data = await getJson(message.author.id);
                 // Global Stats Variables
-                var mId = message.author.id;
-                try {
-                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: 'ytUbHkrHsFmJyErr' } }),
-                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: 'ytUbHkrHsFmJyErr' } }),
-                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoreCount', auth: 'ytUbHkrHsFmJyErr' } }),
-                        totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoresBalance', auth: 'ytUbHkrHsFmJyErr' } });
-                    highestBalanceStoreName = `Artisan_'s Store`;
-                } catch (err) {
-                    console.error(err);
-                };
+                var highestBalance = highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalance', auth: 'ytUbHkrHsFmJyErr' } });
+                var highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'highestBalanceUser', auth: 'ytUbHkrHsFmJyErr' } });
+                var highestBalanceStoreName = `Artisan_'s Store`;
+                var totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoreCount', auth: 'ytUbHkrHsFmJyErr' } });
+                var totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { userId: mId, fetchData: 'totalStoresBalance', auth: 'ytUbHkrHsFmJyErr' } });
                 // User Stats Variables
-                var authorStoreBalance = data.components.store_details.store_balance,
-                    authorStoreName = data.components.store_details.store_name,
-                    authorTotalSoldItems = 0;
+                var authorStoreBalance = data.components.store_details.store_balance;
+                var authorStoreName = data.components.store_details.store_name;
+                var authorTotalSoldItems = 0;
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore :pill:')
                     .setAuthor(message.author.tag, message.guild.iconURL())
@@ -108,6 +107,7 @@ module.exports = {
                         { name: 'Beetroot Economy', value: `\`\`\`${prefix}store buy       » Buy an item from a users store\n${prefix}store browse    » View list of popular stores\`\`\``, inline: false },
                     );
                 thinking.edit({ embeds: [embed] });
+                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreCreate() {
                 var authorUserId = message.author.id;
@@ -123,6 +123,7 @@ module.exports = {
                     .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Successfully created \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                 thinking.edit({ embeds: [embed] });
+                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreDelete() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
@@ -140,12 +141,14 @@ module.exports = {
                             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
                             .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         thinking.edit({ embeds: [embed] });
+                        log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     } else {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setColor('#00ff00')
                             .setDescription(`Successfully deleted \`${authorUserName}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         thinking.edit({ embeds: [embed] });
+                        log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     }
                 } else {
                     const embed = new Discord.MessageEmbed()
@@ -153,6 +156,7 @@ module.exports = {
                         .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
                         .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
                     thinking.edit({ embeds: [embed] });
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
             }
             async function economyStartWorking() {
@@ -178,12 +182,14 @@ module.exports = {
                         .setColor('#00ff00')
                         .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
                     thinking.edit({ embeds: [embed] });
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
                     const json = await getJson(message.author.id);
                     const embed = new Discord.MessageEmbed()
                         .setColor('#ff0000')
                         .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
                     thinking.edit({ embeds: [embed] });
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
             }
 
@@ -195,6 +201,7 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
                 thinking.edit({ embeds: [embed] });
+                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
 
             /* 

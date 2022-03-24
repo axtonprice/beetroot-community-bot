@@ -88,9 +88,9 @@ module.exports = {
                 var highestBalanceStoreName = `Axton's Store`;
                 // Global Stats Variables
                 try {
-                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalance', auth: apitoken, userId: mId } }),
-                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalanceUser', auth: apitoken, userId: mId } }),
-                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoreCount', auth: apitoken, userId: mId } }),
+                    var highestBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalance', auth: apitoken, userId: mId } })
+                        highestBalanceUser = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'highestBalanceUser', auth: apitoken, userId: mId } })
+                        totalStoreCount = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoreCount', auth: apitoken, userId: mId } })
                         totalStoresBalance = await axios.get(`https://api.axtonprice.com/v1/beetroot/requestData`, { params: { fetchData: 'totalStoresBalance', auth: apitoken, userId: mId } });
                 } catch (err) {
                     console.error(err);

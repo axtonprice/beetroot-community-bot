@@ -22,16 +22,16 @@ module.exports = {
         var miD = message.author.id;
         var mUs = message.author.username;
 
-        if (message.author.id != "360832097495285761") {
-            if (message.author.id != "441994490115391488") {
-                message.channel.send("<:890516515844157510:954613427991638076> You do not have permission to use this command! `ERR_DEVELOPMENT`");
-                return;
-            }
-        }
+        // if (message.author.id != "360832097495285761") {
+        //     if (message.author.id != "441994490115391488") {
+        //         message.channel.send("<:890516515844157510:954613427991638076> You do not have permission to use this command! `ERR_DEVELOPMENT`");
+        //         return;
+        //     }
+        // }
 
         const preInitializationDate = new Date();
-        const thinkingEmbed = new Discord.MessageEmbed().setDescription(`Gimme a sec bro..`);
-        const thinking = await message.reply({ embeds: [thinkingEmbed] });
+        // const thinkingEmbed = new Discord.MessageEmbed().setDescription(`Gimme a sec bro..`);
+        // const thinking = await message.reply({ embeds: [thinkingEmbed] });
 
         const init = () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
@@ -68,15 +68,15 @@ module.exports = {
             async function noStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ba3c3c')
-                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}drugstore create\` to create a new drugstore!`);
-                thinking.edit({ embeds: [embed] });
+                    .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}store create\` to create a new drugstore!`);
+                message.channel.send({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ba3c3c')
-                    .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}drugstore\` to view drugstore commands!`);
-                thinking.edit({ embeds: [embed] });
+                    .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}store\` to view drugstore commands!`);
+                message.channel.send({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function sendWebhook(webhook, json) {
@@ -114,7 +114,7 @@ module.exports = {
                         { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details\n\`${prefix}store delete\` - Delete your store`, inline: false },
                         { name: 'Beetroot Economy', value: `\`${prefix}store work\` - Begin working to earn cash\n\`${prefix}store buy\` - Buy an item from a users store\n\`${prefix}store browse\` - View list of popular stores`, inline: false },
                     );
-                thinking.edit({ embeds: [embed] });
+                message.channel.send({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreCreate() {
@@ -124,10 +124,9 @@ module.exports = {
                 }
                 await apiRequest(`insertData?userId=${message.author.id}`); // insert data reqest
                 const embed = new Discord.MessageEmbed()
-                    .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                    .setAuthor({ name: message.author.tag, iconURL: message.user.avatarURL() })
-                    .setDescription(`Successfully created \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                thinking.edit({ embeds: [embed] });
+                    .setColor("#38d15c")
+                    .setDescription(`Successfully created \`${message.author.username}'s Drug Store\`! \nUse \`${prefix}store\` to view drugstore commands!`);
+                message.channel.send({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreDelete() {
@@ -138,26 +137,26 @@ module.exports = {
                 if (args[1] === "confirm") {
                     if (message.author.id === "360832097495285761" && args[2] === "-f") {
                         let user = bot.users.cache.get(args[3]);
-                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
+                        await apiRequest(`customEndpoint?key=delete_store&data=${user.id}`);
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                            .setAuthor({ name: message.author.tag, iconURL: message.user.avatarURL() })
-                            .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
-                        thinking.edit({ embeds: [embed] });
+                            .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() })
+                            .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}store\` to view drugstore commands!`);
+                        message.channel.send({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     } else {
-                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + message.author.id + "'", (error, results, fields) => { });
+                        await apiRequest(`customEndpoint?key=delete_store&data=${message.author.id}`);
                         const embed = new Discord.MessageEmbed()
                             .setColor('#38d15c')
                             .setDescription(`Successfully deleted \`${mUs}'s Drug Store\`!`);
-                        thinking.edit({ embeds: [embed] });
+                        message.channel.send({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     }
                 } else {
                     const embed = new Discord.MessageEmbed()
                         .setColor("#db6c30")
-                        .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
-                    thinking.edit({ embeds: [embed] });
+                        .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}store delete confirm\` to confirm deletion!`);
+                    message.channel.send({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
             }
@@ -180,14 +179,14 @@ module.exports = {
                     const embed = new Discord.MessageEmbed()
                         .setColor('#38d15c')
                         .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
-                    thinking.edit({ embeds: [embed] });
+                    message.channel.send({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
                     const json = await getJson(message.author.id);
                     const embed = new Discord.MessageEmbed()
                         .setColor('#ba3c3c')
                         .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
-                    thinking.edit({ embeds: [embed] });
+                    message.channel.send({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
             }
@@ -196,9 +195,9 @@ module.exports = {
                     noStoreDisplay();
                     return;
                 }
+
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
-                var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate);
-                // if (hasCooldownPassed) {
+                if (moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate)) {
 
                     function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
                     const data = await getJson(message.author.id);
@@ -235,14 +234,14 @@ module.exports = {
                     }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
                     apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
-                // } else {
-                //     const json = await getJson(message.author.id);
-                //     const embed = new Discord.MessageEmbed()
-                //         .setColor('#ba3c3c')
-                //         .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment(cooldownDate).fromNow()}**!`)
-                //     thinking.edit({ embeds: [embed] });
-                //     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
-                // }
+                } else {
+                    const json = await getJson(message.author.id);
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#ba3c3c')
+                        .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment(cooldownDate).fromNow()}**!`)
+                    message.channel.send({ embeds: [embed] });
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                }
             }
             async function test() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
@@ -252,7 +251,7 @@ module.exports = {
 
                 const embed = new Discord.MessageEmbed()
                     .setDescription(`Success! Response: \`${123}\``);
-                thinking.edit({ embeds: [embed] });
+                message.channel.send({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
 

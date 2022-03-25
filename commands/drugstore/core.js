@@ -61,20 +61,20 @@ module.exports = {
             async function scrubDatabase() {
                 connection.query("ALTER TABLE `drug_stores` AUTO_INCREMENT = 0;", (error, results, fields) => {
                     if (error) throw error;
-                    log("- Database Cleaned");
+                    log("» Database Cleaned");
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 });
             }
             async function noStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
-                    .setColor('#ff0000')
+                    .setColor('#ba3c3c')
                     .setDescription(`<:890516515844157510:954613427991638076> You don't own a drugstore! Use \`${prefix}drugstore create\` to create a new drugstore!`);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
-                    .setColor('#ff0000')
+                    .setColor('#ba3c3c')
                     .setDescription(`<:890516515844157510:954613427991638076> You already own a drugstore! Use \`${prefix}drugstore\` to view drugstore commands!`);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
@@ -105,7 +105,7 @@ module.exports = {
                     authorTotalSoldItems = 0;
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                    .setAuthor(message.author.tag, message.guild.iconURL())
+                    .setAuthor({ name: message.author.tag, iconURL: message.guild.iconURL() })
                     .setThumbnail(message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Manage your drugstore or view economy commands to buy or browse that good shit\n`)
                     .addFields(
@@ -148,15 +148,14 @@ module.exports = {
                     } else {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + message.author.id + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
-                            .setColor('#00ff00')
-                            .setDescription(`Successfully deleted \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
+                            .setColor('#38d15c')
+                            .setDescription(`Successfully deleted \`${mUs}'s Drug Store\`!`);
                         thinking.edit({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     }
                 } else {
                     const embed = new Discord.MessageEmbed()
-                        .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                        .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                        .setColor("#db6c30")
                         .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}drugstore delete confirm\` to confirm deletion!`);
                     thinking.edit({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
@@ -179,14 +178,14 @@ module.exports = {
                     apiRequest(`modifyJson?userId=${message.author.id}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
 
                     const embed = new Discord.MessageEmbed()
-                        .setColor('#00ff00')
+                        .setColor('#38d15c')
                         .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
                     thinking.edit({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
                     const json = await getJson(message.author.id);
                     const embed = new Discord.MessageEmbed()
-                        .setColor('#ff0000')
+                        .setColor('#ba3c3c')
                         .setDescription(`<:890516515844157510:954613427991638076> You've already worked today! You can work again **${moment(json.components.store_details.work_again_date).fromNow()}**!`)
                     thinking.edit({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
@@ -200,7 +199,6 @@ module.exports = {
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate);
                 if (hasCooldownPassed) {
-                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
 
                     function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) }
@@ -211,25 +209,26 @@ module.exports = {
                         "headers": { "Content-Type": "application/json" },
                         "body": JSON.stringify(
                             {
-                                "content": "\"Hola amigo vengo con una oferta de canje que no querrás perderte!\"\n_\nThe strange man appears to be offering **Cocaine (x3)**.",
+                                "content": "\"*Hola amigo vengo con una oferta de canje que no querrás perderte!*\"\nThe strange man appears to be offering **Cocaine (x3)**.",
                                 "embeds": [
                                     {
-                                        "title": "Accept Daily Offer?  :dollar:",
+                                        "title": "Accept Daily Offer? :dollar:",
                                         "description": "» This transaction will cost you `$40`. \n» Your current store balance is`$100`. \n» This offer of **Cocaine (x3)** is worth `$200`. \n\nType `.store offer purchase 076789` to accept this offer.",
                                         "color": null
                                     }
                                 ],
                                 "username": "El Estelic Chapo [NPC]",
-                                "avatar_url": "attachment://images/npc0" + randomIntFromInterval(1, 9) + ".jpg"
+                                "avatar_url": "https://raw.githubusercontent.com/axtonprice/beetroot-community-bot/main/commands/drugstore/images/npc0" + randomIntFromInterval(1, 9) + ".jpg"
                             }
                         )
                     }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
+                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
                     const json = await getJson(message.author.id);
                     const embed = new Discord.MessageEmbed()
-                        .setColor('#ff0000')
-                        .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment().fromNow()}**!`)
+                        .setColor('#ba3c3c')
+                        .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment(cooldownDate).fromNow()}**!`)
                     thinking.edit({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }

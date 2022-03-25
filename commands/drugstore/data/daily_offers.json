@@ -1,6 +1,42 @@
 {
-	"1": {
-		"item_name": "Cocaine",
-		"single_unit_worth": ""
+	"001": {
+        "id": "367800",
+		"name": "Cocaine",
+		"single_unit_worth": "50"
+	},
+    "002": {
+        "id": "367801",
+		"name": "Marijuana",
+		"single_unit_worth": "25"
+	},
+    "003": {
+        "id": "367802",
+		"name": "Ecstasy",
+		"single_unit_worth": "25"
+	},
+    "004": {
+        "id": "367803",
+		"name": "Heroin",
+		"single_unit_worth": "40"
+	},
+    "005": {
+        "id": "367804",
+		"name": "LSD",
+		"single_unit_worth": "25"
+	},
+    "006": {
+        "id": "367805",
+		"name": "Mushrooms",
+		"single_unit_worth": "25"
+	},
+    "007": {
+        "id": "367806",
+		"name": "Salvia",                                               
+		"single_unit_worth": "25"
+	},
+    "008": {
+        "id": "367807",
+		"name": "Meth",
+		"single_unit_worth": "25"
 	}
 }

@@ -125,7 +125,7 @@ module.exports = {
                 await apiRequest(`insertData?userId=${message.author.id}`); // insert data reqest
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                    .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                    .setAuthor({ name: message.author.tag, iconURL: message.user.avatarURL() })
                     .setDescription(`Successfully created \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
@@ -141,7 +141,7 @@ module.exports = {
                         connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + args[3] + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
-                            .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                            .setAuthor({ name: message.author.tag, iconURL: message.user.avatarURL() })
                             .setDescription(`Successfully deleted \`${user.username}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
                         thinking.edit({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
@@ -199,12 +199,17 @@ module.exports = {
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate);
                 if (hasCooldownPassed) {
-                    var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
 
+                    var getRandomItemName;
+                    var getRandomItemCount
+                    var getRandomItemSingularPrice;
+                    var getUserStoreBalance;
+                    var getOfferPurchaseId;
+
+                    var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
                     function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) }
                     const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-                    var URL = webhookUrl;
-                    fetch(URL, {
+                    fetch(webhookUrl, {
                         "method": "POST",
                         "headers": { "Content-Type": "application/json" },
                         "body": JSON.stringify(

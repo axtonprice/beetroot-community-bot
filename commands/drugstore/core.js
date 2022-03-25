@@ -198,53 +198,60 @@ module.exports = {
                 }
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate);
-                if (hasCooldownPassed) {
+                // if (hasCooldownPassed) {
 
-                    var getRandomItemName;
-                    var getRandomItemCount
-                    var getRandomItemSingularPrice;
-                    var getUserStoreBalance;
-                    var getOfferPurchaseId;
+                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                    const data = await getJson(message.author.id);
+                    const jsonData = require('./data/daily_offers.json');
+                    const values = Object.values(jsonData);
+                    const randomValue = values[parseInt(Math.random() * values.length)];
+
+                    var getRandomItemName = randomValue["name"];
+                    var getRandomItemCount = randomInteger(2, 4);
+                    var getRandomItemSingularPrice = randomValue["single_unit_worth"];
+                    var getRandomItemTotalPrice = getRandomItemSingularPrice * getRandomItemCount;
+                    var getUserStoreBalance = data.components.store_details.store_balance;
+                    var getOfferPurchaseId = randomValue["id"];
 
                     var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
-                    function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) }
                     const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
                     fetch(webhookUrl, {
                         "method": "POST",
                         "headers": { "Content-Type": "application/json" },
                         "body": JSON.stringify(
                             {
-                                "content": "\"*Hola amigo vengo con una oferta de canje que no querrás perderte!*\"\nThe strange man appears to be offering **Cocaine (x3)**.",
+                                "content": "\"*Hola amigo vengo con una oferta de canje que no querrás perderte!*\"\nThe strange man appears to be offering **" + getRandomItemName + " (x" + getRandomItemCount + ")**.",
                                 "embeds": [
                                     {
                                         "title": "Accept Daily Offer? :dollar:",
-                                        "description": "» This transaction will cost you `$40`. \n» Your current store balance is`$100`. \n» This offer of **Cocaine (x3)** is worth `$200`. \n\nType `.store offer purchase 076789` to accept this offer.",
+                                        "description": "» This transaction will cost you `$" + getRandomItemTotalPrice + "`. \n» Your current store balance is `$" + getUserStoreBalance + "`. \n» This offer of **" + getRandomItemName + " (x" + getRandomItemCount + ")** is worth `$" + getRandomItemTotalPrice + "`. \n\nType `.store offer purchase " + getOfferPurchaseId + "` to accept this offer.",
                                         "color": null
                                     }
                                 ],
                                 "username": "El Estelic Chapo [NPC]",
-                                "avatar_url": "https://raw.githubusercontent.com/axtonprice/beetroot-community-bot/main/commands/drugstore/images/npc0" + randomIntFromInterval(1, 9) + ".jpg"
+                                "avatar_url": "https://raw.githubusercontent.com/axtonprice/beetroot-community-bot/main/commands/drugstore/images/npc0" + randomInteger(1, 9) + ".jpg"
                             }
                         )
                     }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
                     apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
-                } else {
-                    const json = await getJson(message.author.id);
-                    const embed = new Discord.MessageEmbed()
-                        .setColor('#ba3c3c')
-                        .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment(cooldownDate).fromNow()}**!`)
-                    thinking.edit({ embeds: [embed] });
-                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
-                }
+                // } else {
+                //     const json = await getJson(message.author.id);
+                //     const embed = new Discord.MessageEmbed()
+                //         .setColor('#ba3c3c')
+                //         .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment(cooldownDate).fromNow()}**!`)
+                //     thinking.edit({ embeds: [embed] });
+                //     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                // }
             }
             async function test() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
+
                 const embed = new Discord.MessageEmbed()
-                    .setDescription(`Success! Response: \`${await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`)}\``);
+                    .setDescription(`Success! Response: \`${123}\``);
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }

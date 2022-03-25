@@ -79,6 +79,15 @@ module.exports = {
                 thinking.edit({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
+            async function sendWebhook(webhook, json) {
+                const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+                var URL = webhook;
+                fetch(URL, {
+                    "method": "POST",
+                    "headers": { "Content-Type": "application/json" },
+                    "body": JSON.stringify(json)
+                }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
+            }
             async function generalDisplay() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
@@ -86,10 +95,10 @@ module.exports = {
                 }
                 const data = await getJson(message.author.id);
                 // Global Stats Variables
-                var highestBalance = await apiRequest(`requestData?userId=${message.author.id}&fetchData=highestBalance`);
-                var highestBalanceUser = await apiRequest(`requestData?userId=${message.author.id}&fetchData=highestBalanceUser`);
-                var totalStoreCount = await apiRequest(`requestData?userId=${message.author.id}&fetchData=totalStoreCount`);
-                var totalStoresBalance = await apiRequest(`requestData?userId=${message.author.id}&fetchData=totalStoresBalance`);
+                var highestBalance = await apiRequest(`requestData?userId=${message.author.id}&fetchData=highestBalance`),
+                    highestBalanceUser = await apiRequest(`requestData?userId=${message.author.id}&fetchData=highestBalanceUser`),
+                    totalStoreCount = await apiRequest(`requestData?userId=${message.author.id}&fetchData=totalStoreCount`),
+                    totalStoresBalance = await apiRequest(`requestData?userId=${message.author.id}&fetchData=totalStoresBalance`);
                 // User Stats Variables
                 var authorStoreBalance = data.components.store_details.store_balance,
                     authorStoreName = data.components.store_details.store_name,
@@ -101,7 +110,7 @@ module.exports = {
                     .setDescription(`Manage your drugstore or view economy commands to buy or browse that good shit\n`)
                     .addFields(
                         { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
-                        { name: 'Global Statistics', value: `Total Stores: \`${totalStoreCount} ($${totalStoresBalance} Total)\``, inline: true }, // Top User: \`$${highestBalance} - ${highestBalanceUser}\`\n
+                        { name: 'Global Statistics', value: `Total Stores: \`${totalStoreCount}\`\nGlobal Balance: \`$${totalStoresBalance}\``, inline: true }, // Top User: \`$${highestBalance} - ${highestBalanceUser}\`\n
                         { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details\n\`${prefix}store delete\` - Delete your store`, inline: false },
                         { name: 'Beetroot Economy', value: `\`${prefix}store work\` - Begin working to earn cash\n\`${prefix}store buy\` - Buy an item from a users store\n\`${prefix}store browse\` - View list of popular stores`, inline: false },
                     );
@@ -109,12 +118,11 @@ module.exports = {
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
             async function myStoreCreate() {
-
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "true") {
                     alreadyHaveStoreDisplay();
                     return;
                 }
-                await apiRequest(`insertData?userId=${authorUserId}`); // insert data reqest
+                await apiRequest(`insertData?userId=${message.author.id}`); // insert data reqest
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
                     .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
@@ -138,7 +146,7 @@ module.exports = {
                         thinking.edit({ embeds: [embed] });
                         log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                     } else {
-                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + authorUserId + "'", (error, results, fields) => { });
+                        connection.query("DELETE FROM `drug_stores` WHERE `store_owner_id` = '" + message.author.id + "'", (error, results, fields) => { });
                         const embed = new Discord.MessageEmbed()
                             .setColor('#00ff00')
                             .setDescription(`Successfully deleted \`${mUs}'s Drug Store\`! \nUse \`${prefix}drugstore\` to view drugstore commands!`);
@@ -159,8 +167,7 @@ module.exports = {
                     noStoreDisplay();
                     return;
                 }
-                const data = await getJson(authorUserId);
-                json = data;
+                const json = await getJson(message.author.id);
                 var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(json.components.store_details.work_again_date);
                 if (hasCooldownPassed) {
                     function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -168,8 +175,8 @@ module.exports = {
                     json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
                     value = parseInt(json.components.store_details.store_balance) + randomNum;
-                    apiRequest(`modifyJson?userId=${authorUserId}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
-                    apiRequest(`modifyJson?userId=${authorUserId}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
+                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
+                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
 
                     const embed = new Discord.MessageEmbed()
                         .setColor('#00ff00')
@@ -185,7 +192,47 @@ module.exports = {
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
             }
+            async function economyDailyOffer() {
+                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
+                    noStoreDisplay();
+                    return;
+                }
+                const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
+                var hasCooldownPassed = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate);
+                if (hasCooldownPassed) {
+                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
+                    var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
 
+                    const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+                    var URL = webhookUrl;
+                    fetch(URL, {
+                        "method": "POST",
+                        "headers": { "Content-Type": "application/json" },
+                        "body": JSON.stringify(
+                            {
+                                "content": "\"Hola amigo vengo con una oferta de canje que no querrás perderte!\"\n_\nThe strange man appears to be offering **Cocaine (x3)**.",
+                                "embeds": [
+                                    {
+                                        "title": "Accept Daily Offer?  :dollar:",
+                                        "description": "» This transaction will cost you `$40`. \n» Your current store balance is`$100`. \n» This offer of **Cocaine (x3)** is worth `$200`. \n\nType `.store offer purchase 076789` to accept this offer.",
+                                        "color": null
+                                    }
+                                ],
+                                "username": "El Estelic Chapo [NPC]",
+                                "avatar_url": "https://www.biography.com/.image/t_share/MTM5MjE5MzIyMTA2MDI5NDA4/pablo-escobar-gettyimages-452490135_verticaljpg.jpg"
+                            }
+                        )
+                    }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                } else {
+                    const json = await getJson(message.author.id);
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#ff0000')
+                        .setDescription(`<:890516515844157510:954613427991638076> You've already viewed todays offer! Come back **${moment().fromNow()}**!`)
+                    thinking.edit({ embeds: [embed] });
+                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                }
+            }
             async function test() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
@@ -210,12 +257,15 @@ module.exports = {
             } else if (args[0] === "work") {
                 economyStartWorking();
                 scrubDatabase();
+            } else if (args[0] === "offer") {
+                economyDailyOffer();
+                scrubDatabase();
             } else if (args[0] === "test") {
                 test();
-                scrubDatabase();
+            } else if (args[0] === "npc") {
+                testNpc();
             } else {
                 generalDisplay();
-                // scrubDatabase();
             }
 
             connection.end();

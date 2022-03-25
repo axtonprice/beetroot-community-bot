@@ -203,6 +203,7 @@ module.exports = {
                     apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     var webhookUrl = `https://discord.com/api/webhooks/956627269760192542/MHVUNu-aoe6vafv3SX8LDUdOifa0MInyQYi2ahRyDi-v8KTKr0seHBdMLQxYx8N8QyGA`;
 
+                    function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) }
                     const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
                     var URL = webhookUrl;
                     fetch(URL, {
@@ -219,7 +220,7 @@ module.exports = {
                                     }
                                 ],
                                 "username": "El Estelic Chapo [NPC]",
-                                "avatar_url": "https://www.biography.com/.image/t_share/MTM5MjE5MzIyMTA2MDI5NDA4/pablo-escobar-gettyimages-452490135_verticaljpg.jpg"
+                                "avatar_url": "attachment://images/npc0" + randomIntFromInterval(1, 9) + ".jpg"
                             }
                         )
                     }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));

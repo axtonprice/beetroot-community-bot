@@ -23,12 +23,12 @@ module.exports = {
         var miD = message.author.id;
         var mUs = message.author.username;
 
-        // if (message.author.id != "360832097495285761") {
-        //     if (message.author.id != "441994490115391488") {
-        //         message.channel.send("<a:bangcry:957043444684034148> You do not have permission to use this command! `ERR_DEVELOPMENT`");
-        //         return;
-        //     }
-        // }
+        if (message.author.id != "360832097495285761") {
+            if (message.author.id != "441994490115391488") {
+                message.channel.send("<a:bangcry:957043444684034148> You do not have permission to use this command! `ERR_DEVELOPMENT`");
+                return;
+            }
+        }
 
         const preInitializationDate = new Date();
         // const thinkingEmbed = new Discord.MessageEmbed().setDescription(`Gimme a sec bro..`);
@@ -87,7 +87,7 @@ module.exports = {
                     "method": "POST",
                     "headers": { "Content-Type": "application/json" },
                     "body": JSON.stringify(json)
-                }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
+                }).then(res => { console.log(res); }).catch(err => console.error(err));
             }
             async function generalDisplay() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
@@ -198,6 +198,13 @@ module.exports = {
                     return;
                 }
 
+                if (args[1] == "confirm") {
+                    // confirm purchase
+                    var getOfferPurchaseId = randomValue["id"];
+
+                    await apiRequest(`customEndpoint?data=confirm_offer&key=offer_id&value=${getOfferPurchaseId}`);
+                }
+
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 if (moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate)) {
 
@@ -233,7 +240,7 @@ module.exports = {
                                 "avatar_url": "https://raw.githubusercontent.com/axtonprice/beetroot-community-bot/main/commands/drugstore/images/npc0" + randomInteger(1, 9) + ".jpg"
                             }
                         )
-                    }).then(res => { console.log(res); thinking.delete(); }).catch(err => console.error(err));
+                    }).then(res => { console.log(res); }).catch(err => console.error(err));
                     apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 } else {
@@ -244,6 +251,7 @@ module.exports = {
                     message.channel.send({ embeds: [embed] });
                     log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
                 }
+
             }
             async function test() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {

@@ -7,6 +7,7 @@ module.exports = class Command {
 		this.category = options.category || 'Miscellaneous';
 		this.usage = options.usage || 'No usage provided.';
 	}
+	
 	async run(message, args) {
 		throw new Error(`Command ${this.name} doesn't provide a run method!`);
 	}

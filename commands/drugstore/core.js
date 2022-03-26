@@ -198,13 +198,6 @@ module.exports = {
                     return;
                 }
 
-                if (args[1] == "confirm") {
-                    // confirm purchase
-                    var getOfferPurchaseId = randomValue["id"];
-
-                    await apiRequest(`customEndpoint?data=confirm_offer&key=offer_id&value=${getOfferPurchaseId}`);
-                }
-
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 if (moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate)) {
 
@@ -220,6 +213,13 @@ module.exports = {
                     var getRandomItemTotalPrice = getRandomItemSingularPrice * getRandomItemCount;
                     var getUserStoreBalance = data.components.store_details.store_balance;
                     var getOfferPurchaseId = randomValue["id"];
+
+                    if (args[1] == "purchase") {
+                        // confirm purchase
+                        var getOfferPurchaseId = randomValue["id"];
+                        await apiRequest(`customEndpoint?data=confirm_offer&key=offer_id&value=${getOfferPurchaseId}`);
+                        return;
+                    }
 
                     var webhookUrl = `https://discord.com/api/webhooks/${webhook}`;
                     const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));

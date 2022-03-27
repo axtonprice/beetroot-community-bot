@@ -25,7 +25,10 @@ module.exports = {
 
         if (message.author.id != "360832097495285761") {
             if (message.author.id != "441994490115391488") {
-                message.reply("<a:bangcry:957043444684034148> You do not have permission to use this command! `ERR_DEVELOPMENT`");
+                const embed = new Discord.MessageEmbed()
+                    .setColor('#ba3c3c')
+                    .setDescription(`<a:bangcry:957043444684034148> This module is still under development! \nPlease contact <@360832097495285761> for more information.`);
+                message.reply({ embeds: [embed] });
                 return;
             }
         }
@@ -70,15 +73,13 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ba3c3c')
                     .setDescription(`<a:bangcry:957043444684034148> You don't own a drugstore! Use \`${prefix}store create\` to create a new drugstore!`);
-                message.reply({ embeds: [embed] });
-                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
             }
             async function alreadyHaveStoreDisplay() {
                 const embed = new Discord.MessageEmbed()
                     .setColor('#ba3c3c')
                     .setDescription(`<a:bangcry:957043444684034148> You fucking already own a drugstore! Use \`${prefix}store\` to view drugstore commands!`);
-                message.reply({ embeds: [embed] });
-                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
             }
             async function sendWebhook(webhook, json) {
                 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
@@ -103,20 +104,20 @@ module.exports = {
                 // User Stats Variables
                 var authorStoreBalance = data.components.store_details.store_balance,
                     authorStoreName = data.components.store_details.store_name,
+                    authorStoreDesc = data.components.store_details.store_description,
                     authorTotalSoldItems = 0;
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
                     .setAuthor({ name: message.author.tag, iconURL: message.guild.iconURL() })
                     .setThumbnail(message.author.avatarURL({ dynamic: true }))
-                    .setDescription(`Manage your drugstore or view economy commands to buy or browse that good shit\n`)
+                    .setDescription(authorStoreDesc)
                     .addFields(
                         { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                         { name: 'Global Statistics', value: `Total Stores: \`${totalStoreCount}\`\nGlobal Balance: \`$${totalStoresBalance}\``, inline: true }, // Top User: \`$${highestBalance} - ${highestBalanceUser}\`\n
                         { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details\n\`${prefix}store delete\` - Permanently delete your store`, inline: false },
                         { name: 'Beetroot Economy', value: `\`${prefix}store work\` - Begin working to earn cash\n\`${prefix}store buy\` - Buy an item from a users store\n\`${prefix}store browse\` - View list of popular stores`, inline: false },
                     );
-                message.reply({ embeds: [embed] });
-                log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
             }
             async function myStoreUpdate() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {

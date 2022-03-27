@@ -112,25 +112,41 @@ module.exports = {
                     .addFields(
                         { name: 'Your Statistics', value: `Balance: \`$${authorStoreBalance}\`\nName: \`${authorStoreName}\`\nSold: \`${authorTotalSoldItems} Items\``, inline: true },
                         { name: 'Global Statistics', value: `Total Stores: \`${totalStoreCount}\`\nGlobal Balance: \`$${totalStoresBalance}\``, inline: true }, // Top User: \`$${highestBalance} - ${highestBalanceUser}\`\n
-                        { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details\n\`${prefix}store delete\` - Delete your store`, inline: false },
+                        { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details\n\`${prefix}store delete\` - Permanently delete your store`, inline: false },
                         { name: 'Beetroot Economy', value: `\`${prefix}store work\` - Begin working to earn cash\n\`${prefix}store buy\` - Buy an item from a users store\n\`${prefix}store browse\` - View list of popular stores`, inline: false },
                     );
                 message.reply({ embeds: [embed] });
                 log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
             }
-            async function myStoreUpdateDisplay() {
+            async function myStoreUpdate() {
                 if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
                     noStoreDisplay();
                     return;
                 }
-
+                if (args[1] == "name") {
+                    const stringData = args.slice(2).join(' ');
+                    await apiRequest(`customEndpoint?key=update_store&data=${message.author.id}&data1=store_name&data2=${stringData}`);
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#38d15c')
+                        .setDescription(`:thumbsup: Updated your store name to \`${stringData}\`!`);
+                    message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
+                    return;
+                } else if (args[1] == "desc") {
+                    const stringData = args.slice(2).join(' ');
+                    await apiRequest(`customEndpoint?key=update_store&data=${message.author.id}&data1=store_description&data2=${stringData}`);
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#38d15c')
+                        .setDescription(`:thumbsup: Updated your store description to \`${stringData}\`!`);
+                    message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
+                    return;
+                }
                 const embed = new Discord.MessageEmbed()
                     .setTitle('Beetroot Drugstore <:pepehigh:956696541232529448>')
                     .setAuthor({ name: message.author.tag, iconURL: message.guild.iconURL() })
                     .setThumbnail(message.author.avatarURL({ dynamic: true }))
                     .setDescription(`Update your drugstore settings with the commands below\n`)
                     .addFields(
-                        { name: 'Available Commands', value: `\`${prefix}store update name "abc123"\` - Update your store name\n\`${prefix}store uodate desc "abc123"\` - Update your store description`, inline: false },
+                        { name: 'Available Commands', value: `\`${prefix}store update name ab123\` - Update your store name\n\`${prefix}store update desc abc123\` - Update your store description`, inline: false },
                     );
                 message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
             }
@@ -193,7 +209,7 @@ module.exports = {
 
                     const embed = new Discord.MessageEmbed()
                         .setColor('#38d15c')
-                        .setDescription(`:dollar: **Axton's Drugstore** earned \`$${randomNum}\` from 5 hours of work!`)
+                        .setDescription(`:dollar: **${json.components.store_details.store_name}** earned \`$${randomNum}\` from 5 hours of work!`)
                     message.reply({ embeds: [embed] }).then(msg => { log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
                 } else {
                     const json = await getJson(message.author.id);
@@ -287,7 +303,7 @@ module.exports = {
                 myStoreDelete();
                 scrubDatabase();
             } else if (args[0] === "update") {
-                myStoreUpdateDisplay();
+                myStoreUpdate();
             } else if (args[0] === "work") {
                 economyStartWorking();
                 scrubDatabase();

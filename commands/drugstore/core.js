@@ -268,9 +268,10 @@ module.exports = {
                             }
                         )
                     }).then(res => {
-                        apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
-                        log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
-                    }).catch(err => console.error(err));
+                        apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`).then(
+                            log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`) // Log completion
+                        ); // sets work cooldown
+                    });
 
                 } else {
                     const json = await getJson(message.author.id);

@@ -201,8 +201,15 @@ module.exports = {
                 const cooldownDate = await apiRequest(`requestData?userId=${message.author.id}&fetchData=economy_offer_cooldown_date`);
                 if (moment(moment(new Date()).format("YYYY-MM-DD HH:mm:ss")).isAfter(cooldownDate)) {
 
-                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+                    if (args[1] == "purchase" && args[2]) {
+                        // confirm purchase
+                        var getOfferPurchaseId = randomValue["id"];
+                        await apiRequest(`customEndpoint?data=confirm_offer&key=offer_id&value=${getOfferPurchaseId}`);
+                        return;
+                    }
+
                     const data = await getJson(message.author.id);
+                    function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
                     const jsonData = require('./data/daily_offers.json');
                     const values = Object.values(jsonData);
                     const randomValue = values[parseInt(Math.random() * values.length)];
@@ -213,13 +220,6 @@ module.exports = {
                     var getRandomItemTotalPrice = getRandomItemSingularPrice * getRandomItemCount;
                     var getUserStoreBalance = data.components.store_details.store_balance;
                     var getOfferPurchaseId = randomValue["id"];
-
-                    if (args[1] == "purchase") {
-                        // confirm purchase
-                        var getOfferPurchaseId = randomValue["id"];
-                        await apiRequest(`customEndpoint?data=confirm_offer&key=offer_id&value=${getOfferPurchaseId}`);
-                        return;
-                    }
 
                     var webhookUrl = `https://discord.com/api/webhooks/${webhook}`;
                     const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
@@ -240,9 +240,11 @@ module.exports = {
                                 "avatar_url": "https://raw.githubusercontent.com/axtonprice/beetroot-community-bot/main/commands/drugstore/images/npc0" + randomInteger(1, 9) + ".jpg"
                             }
                         )
-                    }).then(res => { console.log(res); }).catch(err => console.error(err));
-                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
-                    log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                    }).then(res => {
+                        apiRequest(`modifyJson?userId=${message.author.id}&changeKey=economy_offer_cooldown_date&changeValue=null`); // sets work cooldown
+                        log(`Executed in ${(new Date() - preInitializationDate) / 1000} seconds`);
+                    }).catch(err => console.error(err));
+
                 } else {
                     const json = await getJson(message.author.id);
                     const embed = new Discord.MessageEmbed()

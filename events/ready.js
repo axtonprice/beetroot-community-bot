@@ -17,8 +17,7 @@ module.exports = (bot, client, message) => {
     const prefix = env.PREFIX;
     function debugLog(content) { console.log(`[${new Date().toDateString()} DEBUG] ${content}`); }
     // Startup
-    // let statusmessage = `${prefix}drugstore | v1.0.1`;
-    let statusmessage = `Beetroot Peeps | v1.0.1`;
+    let statusmessage = `Beetroot Peeps | v1.0.5`;
     bot.user.setPresence({ statusmessage: "online" }); bot.user.setActivity(statusmessage, { type: "WATCHING" });
     console.log(`\n---\nLogged in as ${bot.user.tag}!\n`);
     /* 

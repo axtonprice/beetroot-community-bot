@@ -21,7 +21,6 @@ module.exports = (bot, client, message) => {
     let statusmessage = `Beetroot Peeps | v1.0.1`;
     bot.user.setPresence({ statusmessage: "online" }); bot.user.setActivity(statusmessage, { type: "WATCHING" });
     console.log(`\n---\nLogged in as ${bot.user.tag}!\n`);
-
     /* 
     Custom Event Modules:
     */
@@ -36,8 +35,18 @@ module.exports = (bot, client, message) => {
         }
     })
 
-    var channel = bot.channels.cache.get("954596313197080586");
-    // channel.send("Online and waiting..");
+    // function makeid(length) {
+    //     var result = '';
+    //     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    //     var charactersLength = characters.length;
+    //     for (var i = 0; i < length; i++) {
+    //         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    //     }
+    //     return result;
+    // }
+    // bot.channels.cache.get("957705257952108614").setName(`SID: ${makeid(10)}`);
+
     /*
     END Custom Event Modules
     */

@@ -2,10 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
-# VSC
+# Custom
 Beetroot Community Bot.code-workspace
-
-# Windows files
+package-lock.json
 Thumbs.db
 
 ### Node ###

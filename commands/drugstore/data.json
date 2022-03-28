@@ -1,26 +1,20 @@
 {
 	"components": {
 		"store_details": {
-			"store_name": "bruh",
-			"store_description": "descbruh",
+			"store_name": "Tesco Express",
+			"store_description": "My completely madderz druggy shack- please come buy my shit else ima shank u",
 			"last_purchase": "2022-03-19 03:42:21.000000",
-			"store_balance": "400",
-			"work_again_date": "2022-03-26 20:21:46",
-			"economy_offer_cooldown_date": "null"
+			"store_balance": "100",
+			"work_again_date": "2022-03-21 03:42:21.000000"
 		},
-		"store_menu": {
-			"001": {
+		"store_inventory": {
+			"87751": {
 				"drug_name": "Weed",
+				"count": "1",
 				"drug_description": "Green devils lettuce",
 				"date_added": "2022-03-19 03:42:21.000000"
 			}
 		},
-		"store_customers": {
-			"441994490115391488": {
-				"item_id_purchase": "001",
-				"sales_price": "100",
-				"purchase_date": "2022-03-19 03:42:21.000000"
-			}
-		}
+		"store_customers": []
 	}
 }

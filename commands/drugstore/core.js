@@ -19,6 +19,7 @@ module.exports = {
     aliases: ['drug', "drugstore", "ds", "str", "stor", "drugs", "druggy", "drugshack", "sell", "buy"],
     run: async (bot, message, args) => {
 
+        // const commandUsage = ;
         const log = function (content) { console.log(`[${moment(new Date()).format("YYYY-MM-DD HH:mm")} DEBUG] ${content} - "${message.content}" « ${message.author.tag}`); }
         var miD = message.author.id;
         var mUs = message.author.username;
@@ -106,7 +107,7 @@ module.exports = {
                 var authorStoreBalance = data.components.store_details.store_balance,
                     authorStoreName = data.components.store_details.store_name,
                     authorStoreDesc = data.components.store_details.store_description,
-                    authorTotalSoldItems = 0;
+                    authorTotalSoldItems = Object.keys(data.components.store_customers).length;
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`${authorStoreName} <:pepehigh:956696541232529448>`)
                     .setAuthor({ name: message.author.tag, iconURL: message.guild.iconURL() })
@@ -116,7 +117,7 @@ module.exports = {
                         { name: 'Your Statistics :dollar:', value: `Balance: \`$${authorStoreBalance}\`\nSold: \`${authorTotalSoldItems} Drugs\``, inline: true },
                         { name: 'Global Statistics :globe_with_meridians:', value: `Total Stores: \`${totalStoreCount}\`\nGlobal Balance: \`$${totalStoresBalance}\``, inline: true }, // Top User: \`$${highestBalance} - ${highestBalanceUser}\`\n
                         { name: 'Manage Your Store', value: `\`${prefix}store update\` - Update your store details :gear:\n\`${prefix}store delete\` - Permanently delete your store <:trash:957673378821570590>`, inline: false },
-                        { name: 'Beetroot Economy', value: `\`${prefix}store view\` - View a store page & store inventory :eyes:\n\`${prefix}store work\` - Begin working to earn cash :dollar:\n\`${prefix}store buy\` - Buy an item from a users store :credit_card:\n\`${prefix}store browse\` - View list of popular stores :fire:`, inline: false },
+                        { name: 'Beetroot Economy', value: `\`${prefix}store view\` - View store page & store inventory :eyes:\n\`${prefix}store work\` - Begin working to earn cash :dollar:\n\`${prefix}store buy\` - Buy an item from a users store :credit_card:\n\`${prefix}store browse\` - View list of popular stores :fire:`, inline: false },
                     )
                     .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
                     .setTimestamp();
@@ -322,7 +323,7 @@ module.exports = {
 
                 const data = await getJson(message.author.id);
                 function randomInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-                const jsonData = require('http://ptero.axtonprice.cf:8880/storage/daily_offers.json');
+                const jsonData = 'http://ptero.axtonprice.cf:8880/storage/daily_offers.json';
                 const values = Object.values(jsonData);
                 const randomValue = values[parseInt(Math.random() * values.length)];
 
@@ -377,17 +378,6 @@ module.exports = {
                     }
                 }
 
-            }
-            async function test() {
-                if (await apiRequest(`requestData?userId=${message.author.id}&fetchData=doesStoreExist`) === "false") {
-                    noStoreDisplay();
-                    return;
-                }
-                const embed = new Discord.MessageEmbed()
-                    .setDescription(`Success! Response: \`${123}\``)
-                    .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
-                    .setTimestamp();
-                message.reply({ embeds: [embed] }).then(msg => { log(`» Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
             }
 
             /* 

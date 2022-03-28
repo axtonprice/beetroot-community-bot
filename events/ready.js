@@ -27,7 +27,7 @@ module.exports = (bot, client, message) => {
         if (message.content === `<@!${bot.user.id}>`) {
             const embed = new Discord.MessageEmbed()
                 .setTitle('Hello! 👋')
-                .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+                .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() })
                 .setDescription(`My prefix here is \`${prefix}\`. Use this at the start of your message to execute a command.`)
                 .setTimestamp()
             message.reply({ embeds: [embed] });

@@ -239,20 +239,21 @@ module.exports = {
                         userNoStoreDisplay();
                         return;
                     }
-                    const json = await getJson(user.id);
-                    var givenUserStoreName = json.components.store_details.store_name;
-                    var givenUserStoreDesc = json.components.store_details.store_description;
-                    var givenUserStoreBalance = json.components.store_details.store_balance;
-                    var givenUserStoreLastPurchase = json.components.store_details.last_purchase;
-                    var givenUserInventoryCount = Object.keys(json.components.store_inventory).length;
+                    const data = await getJson(user.id);
+                    var givenUserStoreName = data.components.store_details.store_name;
+                    var givenUserStoreDesc = data.components.store_details.store_description;
+                    var givenUserStoreBalance = data.components.store_details.store_balance;
+                    var givenUserStoreLastPurchase = data.components.store_details.last_purchase;
+                    var givenUserInventoryCount = Object.keys(data.components.store_inventory).length;
 
+                    console.log(data.components.store_inventory)["43259"];
                     const embed = new Discord.MessageEmbed()
                         .setTitle(`${givenUserStoreName} <:pepehigh:956696541232529448>`)
                         .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() })
                         .setDescription(`"${givenUserStoreDesc}"`)
                         .addFields(
                             { name: 'Store Details', value: `Store Owner: \`${user.tag}\`\nStore Balance: \`$${givenUserStoreBalance}\`\nLast Sale: \`${moment(givenUserStoreLastPurchase).format("Do MMMM YYYY")}\`\nInventory: \`${givenUserInventoryCount} drugs\``, inline: true },
-                            { name: 'Store Inventory', value: `${json.components.store_inventory}`, inline: true },
+                            { name: 'Store Inventory', value: `a`, inline: true },
                         )
                         .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
                         .setTimestamp();
@@ -262,12 +263,12 @@ module.exports = {
                         noStoreDisplay();
                         return;
                     }
-                    const json = await getJson(message.author.id);
-                    var givenUserStoreName = json.components.store_details.store_name;
-                    var givenUserStoreDesc = json.components.store_details.store_description;
-                    var givenUserStoreBalance = json.components.store_details.store_balance;
-                    var givenUserStoreLastPurchase = json.components.store_details.last_purchase;
-                    var givenUserInventoryCount = Object.keys(json.components.store_inventory).length;
+                    const data = await getJson(message.author.id);
+                    var givenUserStoreName = data.components.store_details.store_name;
+                    var givenUserStoreDesc = data.components.store_details.store_description;
+                    var givenUserStoreBalance = data.components.store_details.store_balance;
+                    var givenUserStoreLastPurchase = data.components.store_details.last_purchase;
+                    var givenUserInventoryCount = Object.keys(data.components.store_inventory).length;
 
                     const embed = new Discord.MessageEmbed()
                         .setTitle(`${givenUserStoreName} <:pepehigh:956696541232529448>`)
@@ -275,7 +276,7 @@ module.exports = {
                         .setDescription(`"${givenUserStoreDesc}"`)
                         .addFields(
                             { name: 'Store Details', value: `Store Owner: \`${message.author.tag}\`\nStore Balance: \`$${givenUserStoreBalance}\`\nLast Sale: \`${moment(givenUserStoreLastPurchase).format("Do MMMM YYYY")}\`\nInventory: \`${givenUserInventoryCount} drugs\``, inline: true },
-                            { name: 'Store Inventory', value: `${json.components.store_inventory}`, inline: true },
+                            { name: 'Store Inventory', value: `${data.components.store_inventory}`, inline: true },
                         )
                         .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
                         .setTimestamp();

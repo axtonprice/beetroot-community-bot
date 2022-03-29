@@ -13,8 +13,16 @@
 				"count": "1",
 				"drug_description": "Green devils lettuce",
 				"date_added": "2022-03-19 03:42:21.000000"
+			},
+			"43259": {
+				"drug_name": "Cocaine",
+				"count": "3",
+				"drug_description": "White shit",
+				"date_added": "2022-03-28 00:51:41.000000"
 			}
 		},
-		"store_customers": []
+		"store_customers": {
+			
+		}
 	}
 }

@@ -246,7 +246,7 @@ module.exports = {
                     var givenUserStoreLastPurchase = data.components.store_details.last_purchase;
                     var givenUserInventoryCount = Object.keys(data.components.store_inventory).length;
 
-                    console.log(data.components.store_inventory)["43259"];
+                    console.log(data.components.store_inventory)["43259"]; // log json to console
                     const embed = new Discord.MessageEmbed()
                         .setTitle(`${givenUserStoreName} <:pepehigh:956696541232529448>`)
                         .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() })

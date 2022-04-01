@@ -20,9 +20,10 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // const commandUsage = ;
-        const log = function (content) { console.log(`[${moment(new Date()).format("YYYY-MM-DD HH:mm")} DEBUG] ${content} - "${message.content}" « ${message.author.tag}`); }
-        var miD = message.author.id;
-        var mUs = message.author.username;
+        const log = function (content) {
+            console.log(`[${moment(new Date()).format("YYYY-MM-DD HH:mm")} DEBUG] ${content} - "${message.content}" « ${message.author.tag}`);
+        };
+        const preInitializationDate = new Date();
 
         if (message.author.id != "360832097495285761") {
             if (message.author.id != "441994490115391488") {
@@ -35,8 +36,6 @@ module.exports = {
                 }
             }
         }
-
-        const preInitializationDate = new Date();
 
         const init = () => {
             var connection = mysql.createConnection({ host: 'plesk.oxide.host', user: 'surgenet_test', password: 'Hf2i0#6a', database: 'beetroot_store' });
@@ -313,8 +312,8 @@ module.exports = {
                     json.components.store_details.store_balance = parseInt(json.components.store_details.store_balance) + randomNum;
 
                     value = parseInt(json.components.store_details.store_balance) + randomNum;
-                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
-                    apiRequest(`modifyJson?userId=${message.author.id}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
+                    await apiRequest(`modifyJson?userId=${message.author.id}&changeKey=store_balance&changeValue=${randomNum}`); // updates store balance
+                    await apiRequest(`modifyJson?userId=${message.author.id}&changeKey=work_again_date&changeValue=null`); // sets work cooldown
 
                     const embed = new Discord.MessageEmbed()
                         .setColor('#38d15c')

@@ -1,28 +1,20 @@
 {
 	"components": {
 		"store_details": {
-			"store_name": "Tesco Express",
-			"store_description": "My completely madderz druggy shack- please come buy my shit else ima shank u",
+			"store_name": "cum shack",
+			"store_description": "welcome to the cum shack",
 			"last_purchase": "2022-03-19 03:42:21.000000",
-			"store_balance": "100",
+			"store_balance": "0",
 			"work_again_date": "2022-03-21 03:42:21.000000"
 		},
 		"store_inventory": {
-			"87751": {
+			"59701": {
 				"drug_name": "Weed",
 				"count": "1",
 				"drug_description": "Green devils lettuce",
 				"date_added": "2022-03-19 03:42:21.000000"
-			},
-			"43259": {
-				"drug_name": "Cocaine",
-				"count": "3",
-				"drug_description": "White shit",
-				"date_added": "2022-03-28 00:51:41.000000"
 			}
 		},
-		"store_customers": {
-			
-		}
+		"store_customers": []
 	}
 }

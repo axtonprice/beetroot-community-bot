@@ -63,6 +63,14 @@ module.exports = {
                     console.error(err)
                 }
             }
+            async function commandNotFoundDisplay() {
+                const embed = new Discord.MessageEmbed()
+                    .setColor('#ba3c3c')
+                    .setDescription(`<a:bangcry:957043444684034148> Command module not found! \nPlease use \`${prefix}store\` to view all commands.`)
+                    .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
+                    .setTimestamp();
+                message.reply({ embeds: [embed] }).then(msg => { log(`» Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
+            }
             async function scrubDatabase() {
                 connection.query("ALTER TABLE `drug_stores` AUTO_INCREMENT = 0;", (error, results, fields) => {
                     if (error) throw error;
@@ -227,7 +235,14 @@ module.exports = {
                         .setDescription(`Are you sure you want to delete your drugstore? \nUse \`${prefix}store delete confirm\` to confirm deletion!`)
                         .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
                         .setTimestamp();
-                    message.reply({ embeds: [embed] }).then(msg => { log(`» Executed in ${(new Date() - preInitializationDate) / 1000} seconds`); });
+                    message.reply({ embeds: [embed] }).then((msg) => {
+                        setTimeout(async function () {
+                            const newembed = new Discord.MessageEmbed()
+                                .setColor("#ba3c3c")
+                                .setDescription(`<a:bangcry:957043444684034148> Request timed out.`)
+                            msg.edit({ embeds: [newembed] });
+                        }, 25000);
+                    });
                 }
             }
             async function economyStoreViewDisplay() {
@@ -245,15 +260,16 @@ module.exports = {
                     var givenUserStoreBalance = data.components.store_details.store_balance;
                     var givenUserStoreLastPurchase = data.components.store_details.last_purchase;
                     var givenUserInventoryCount = Object.keys(data.components.store_inventory).length;
+                    var givenUserStoreInventory = data.components.store_inventory;
 
-                    console.log(data.components.store_inventory)["43259"]; // log json to console
+                    console.log(data.components.store_inventory); // log json to console ???
                     const embed = new Discord.MessageEmbed()
                         .setTitle(`${givenUserStoreName} <:pepehigh:956696541232529448>`)
                         .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() })
                         .setDescription(`"${givenUserStoreDesc}"`)
                         .addFields(
                             { name: 'Store Details', value: `Store Owner: \`${user.tag}\`\nStore Balance: \`$${givenUserStoreBalance}\`\nLast Sale: \`${moment(givenUserStoreLastPurchase).format("Do MMMM YYYY")}\`\nInventory: \`${givenUserInventoryCount} drugs\``, inline: true },
-                            { name: 'Store Inventory', value: `a`, inline: true },
+                            { name: 'Store Inventory', value: `${givenUserStoreInventory}`, inline: true },
                         )
                         .setFooter({ text: `Executed in ${(new Date() - preInitializationDate) / 1000}s` })
                         .setTimestamp();
@@ -383,28 +399,31 @@ module.exports = {
 
             /* 
                 Function Loader Handler 
+                Module aliases are as follows
             */
 
-            if (args[0] === "create") {
-                myStoreCreate();
-                scrubDatabase();
-            } else if (args[0] === "delete") {
-                myStoreDelete();
-                scrubDatabase();
-            } else if (args[0] === "update") {
-                myStoreUpdate();
-            } else if (args[0] === "view") {
-                economyStoreViewDisplay();
-            } else if (args[0] === "work") {
-                economyStartWorking();
-            } else if (args[0] === "offer") {
-                economyDailyOffer();
-            } else {
-                generalDisplay();
+            if (args[0] === "create" || args[0] === "new") {
+                myStoreCreate(); // MODULE: Create new store
+                scrubDatabase(); // Reset database auto increment
+            } else if (args[0] === "delete" || args[0] === "remove" || args[0] === "close") {
+                myStoreDelete(); // MODULE: Delete store
+                scrubDatabase(); // Reset database auto increment
+            } else if (args[0] === "update" || args[0] === "edit" || args[0] === "settings") {
+                myStoreUpdate(); // MODULE: Update store details
+            } else if (args[0] === "view" || args[0] === "viewstore") {
+                economyStoreViewDisplay(); // MODULE: View user store
+            } else if (args[0] === "work" || args[0] === "owkr" || args[0] === "wokr") {
+                economyStartWorking(); // MODULE: Daily work 
+            } else if (args[0] === "offer" || args[0] === "daily" || args[0] === "dailyoffer") {
+                economyDailyOffer(); // MODULE: Daily offer
+            } else if (!args[0]) {
+                generalDisplay(); // DISPLAY: General store display
+            } else { // No module command found for provided arguments
+                commandNotFoundDisplay(); // DISPLAY: Command not found display
             }
 
             connection.end();
         };
-        await init();
+        init();
     }
 }

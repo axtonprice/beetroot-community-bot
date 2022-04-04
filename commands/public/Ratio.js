@@ -8,6 +8,7 @@ module.exports = {
     aliases: ['bamboozle'],
     run: async (bot, message, args) => {
         
+        if(!args[0]) return;
         message.channel.send(`stfu ${args[0]} get ratioed fucking loser`);
        
     }

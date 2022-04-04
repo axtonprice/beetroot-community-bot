@@ -6,6 +6,7 @@
 Beetroot Community Bot.code-workspace
 package-lock.json
 Thumbs.db
+.gitignore
 
 ### Node ###
 # Logs

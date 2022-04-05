@@ -6,6 +6,7 @@
 Beetroot Community Bot.code-workspace
 package-lock.json
 Thumbs.db
+.gitignore
 
 ### Node ###
 # Logs
@@ -51,6 +52,9 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+
+# TypeScript v1 declaration files
+.cache
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
